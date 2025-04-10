@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 
-import { LoginPage } from './pages/login/login';
-import { HomePage } from './pages/home/home';
+import { LoginPage } from '@/pages/login/login';
+import { HomePage } from '@/pages/home/home';
+import { UsersPage } from '@/pages/users/users';
 
 export const App = () => {
   return (
@@ -9,6 +10,7 @@ export const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/users" element={<UsersPage />} />
         <Route path="/" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

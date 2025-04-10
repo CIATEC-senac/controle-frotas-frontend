@@ -12,20 +12,41 @@ export class API {
     this.http = new Http(`http://${location.hostname}:3000`);
   }
 
-  public login(cpf: string, password: string): Promise<string> {
+  public async login(cpf: string, password: string): Promise<string> {
     return this.http
       .request('/auth/login', {
         method: 'POST',
         data: { cpf, password },
       })
-      .then((response) => response.data.access_token);
+      .then(({ data }) => data.access_token);
   }
 
-  public getUser() {
-    return this.http.request<User>('/user').then((response) => response.data);
+  public async getUsers() {
+    return this.http.request<User[]>('/user').then(({ data }) => data);
   }
 
-  public getRoutes(
+  public async getUser() {
+    return this.http.request<User>('/user').then(({ data }) => data);
+  }
+
+  public async updateUser(user: User) {
+    return await this.http
+      .request<User>('/user', {
+        method: user.id ? 'PATCH' : 'POST',
+        data: user,
+      })
+      .then(({ data }) => data);
+  }
+
+  public async deleteUser(user: User) {
+    return await this.http
+      .request<User>(`/user/${user.id}`, {
+        method: 'DELETE',
+      })
+      .then(({ data }) => data);
+  }
+
+  public async getRoutes(
     // data inicial padrão de 7 dias
     from: Date = dayjs().subtract(7, 'days').startOf('day').toDate(),
     to: Date = dayjs().toDate()
@@ -33,6 +54,6 @@ export class API {
     // GET http://backend/route?from=&to=
     return this.http
       .request<Route[]>('/route', { params: { from, to } })
-      .then((response) => response.data);
+      .then(({ data }) => data);
   }
 }

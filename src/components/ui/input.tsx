@@ -13,11 +13,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          'flex h-10 items-center rounded-md border border-input pl-3 pr-3 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2',
+          'flex h-10 items-center rounded-md border border-input text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2',
           className
         )}
       >
-        {prefixIcon}
+        {prefixIcon && <div className="pl-3">{prefixIcon}</div>}
 
         <input
           type={type}
@@ -29,7 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
 
-        {suffixIcon}
+        {suffixIcon && <div className="pr-3">{suffixIcon}</div>}
       </div>
     );
   }

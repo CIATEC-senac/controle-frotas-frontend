@@ -45,7 +45,7 @@ export const ScheduledRoutes = () => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
         {data.map((route) => (
-          <RouteCard route={route} />
+          <RouteCard key={route.id} route={route} />
         ))}
       </div>
     );

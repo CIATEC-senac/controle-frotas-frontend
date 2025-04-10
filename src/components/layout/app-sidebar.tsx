@@ -19,7 +19,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { JSX } from 'react';
 
 type AppRoutingDetails = {
   title: string;

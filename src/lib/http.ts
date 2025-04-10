@@ -46,7 +46,7 @@ export class Http {
       ...config.headers,
     };
 
-    await this.wait(2000);
+    await this.wait(500);
 
     return this.axios.request<T>(config);
   }
