@@ -1,17 +1,30 @@
+import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { fromModel } from '@/pages/users/user-form';
-
-import { UserFormDialog } from './user-form-dialog';
+import { fromModel, UserForm } from '@/pages/users/user-form';
+import { FormDialog } from '@/components/layout/form-dialog';
 
 export const CreateUserDialog = () => {
+  const [open, setOpen] = useState(false);
+
+  const close = () => setOpen(false);
+
+  const trigger = (
+    <Button className="h-[40px]">
+      <Plus />
+      Novo usuário
+    </Button>
+  );
+
   return (
-    <UserFormDialog title="Novo Usuário" user={fromModel()}>
-      <Button className="h-[40px]">
-        <Plus />
-        Novo usuário
-      </Button>
-    </UserFormDialog>
+    <FormDialog
+      open={open}
+      onOpenChange={setOpen}
+      title="Novo Usuário"
+      trigger={trigger}
+    >
+      <UserForm onSuccess={close} onFailure={close} user={fromModel()} />
+    </FormDialog>
   );
 };

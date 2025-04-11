@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import dayjs from 'dayjs';
-import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from 'react-query';
+import { format } from '@react-input/mask';
+import { AxiosError } from 'axios';
+import dayjs from 'dayjs';
 
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { User } from '@/models/user.type';
 import { API } from '@/lib/api';
-import { DialogClose } from '@/components/ui/dialog';
 
 export const fromModel = (user?: User) => {
   return {
@@ -18,15 +18,18 @@ export const fromModel = (user?: User) => {
     email: user?.email,
     cpf: user?.cpf,
     cnh: user?.cnh,
-    admittedAt:
-      user?.admittedAt != undefined && dayjs(user?.admittedAt).isValid()
-        ? dayjs(user?.admittedAt).format('DD/MM/YYYY')
-        : undefined,
+    admittedAt: user?.admittedAt,
     status: user?.status,
   } as User;
 };
 
-export const UsersForm = ({ user }: { user: User }) => {
+type UserFormAttr = {
+  user: User;
+  onSuccess: VoidFunction;
+  onFailure: VoidFunction;
+};
+
+export const UserForm = ({ user, onSuccess, onFailure }: UserFormAttr) => {
   const queryClient = useQueryClient();
 
   const [state, setState] = useState(user);
@@ -35,20 +38,30 @@ export const UsersForm = ({ user }: { user: User }) => {
     (user: User) => new API().updateUser(user),
     {
       onError: (e: any) => {
+        const options = { onClose: () => onFailure() };
+
         if (e instanceof AxiosError) {
-          toast.error(e.response?.data?.message ?? e.message);
+          let message = e.message;
+
+          const apiMessage = e.response?.data?.message;
+
+          if (apiMessage != undefined) {
+            message = Array.isArray(apiMessage) ? apiMessage.at(0) : apiMessage;
+          }
+
+          toast.error(message, options);
         } else {
           toast.error(
             state.id
               ? 'Não foi possível adicionar usuário'
-              : 'Não foi possível editar usuário'
+              : 'Não foi possível editar usuário',
+            options
           );
         }
-
-        console.error(e);
       },
       onSuccess: () => {
         queryClient.invalidateQueries(['users']);
+        onSuccess();
       },
     }
   );
@@ -61,6 +74,19 @@ export const UsersForm = ({ user }: { user: User }) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((state) => ({ ...state, [e.target.id]: e.target.value }));
   };
+
+  const maskedCPF = format(state.cpf, {
+    mask: '___.___.___-__',
+    replacement: { _: /\d/ },
+  });
+
+  const maskedAdmittedAt = format(
+    state.admittedAt ? dayjs(state.admittedAt).format('DDMMYYYY') : '',
+    {
+      mask: '__/__/____',
+      replacement: { _: /\d/ },
+    }
+  );
 
   return (
     <form onSubmit={onSubmit}>
@@ -86,8 +112,8 @@ export const UsersForm = ({ user }: { user: User }) => {
             onChange={onChange}
             id="cpf"
             label="CPF"
-            value={state.cpf}
-            maxLength={11}
+            value={maskedCPF}
+            maxLength={14}
             disabled={isLoading}
           />
 
@@ -104,7 +130,7 @@ export const UsersForm = ({ user }: { user: User }) => {
             id="cnh"
             label="CNH"
             value={state.cnh}
-            maxLength={8}
+            maxLength={11}
             disabled={isLoading}
           />
 
@@ -112,18 +138,16 @@ export const UsersForm = ({ user }: { user: User }) => {
             onChange={onChange}
             id="admittedAt"
             label="Data Admissão"
-            value={state.admittedAt}
+            value={maskedAdmittedAt}
             maxLength={10}
             disabled={isLoading}
           />
         </div>
 
         <div className="w-full flex gap-6 justify-end">
-          <DialogClose asChild>
-            <Button disabled={isLoading} variant="secondary">
-              Cancelar
-            </Button>
-          </DialogClose>
+          <Button disabled={isLoading} variant="secondary">
+            Cancelar
+          </Button>
 
           <Button disabled={isLoading} type="submit">
             Salvar

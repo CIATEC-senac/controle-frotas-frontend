@@ -82,8 +82,6 @@ export const UsersPage = () => {
         </div>
 
         {getChildren()}
-
-        <ToastContainer />
       </div>
     </Layout>
   );

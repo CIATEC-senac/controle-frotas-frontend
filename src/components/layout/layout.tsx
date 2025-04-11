@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
@@ -27,6 +28,8 @@ export const Layout = ({
 
         <main className="flex flex-col p-6">{children}</main>
       </div>
+
+      <ToastContainer />
     </SidebarProvider>
   );
 };
