@@ -6,28 +6,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { User } from '@/models/user.type';
-import { fromModel, UsersForm } from '@/pages/users/user-form';
 
-export const UserFormDialog = ({
-  user,
+export const FormDialog = ({
   title,
+  open,
+  onOpenChange,
+  trigger,
   children,
 }: {
-  user: User;
   title: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  trigger: ReactNode;
   children: ReactNode;
 }) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
 
       <DialogContent className="max-h-[100%] overflow-auto h-full min-w-full rounded-none md:h-auto md:min-w-auto md:rounded-lg">
         <DialogHeader>
           <DialogTitle children={title} />
         </DialogHeader>
 
-        <UsersForm user={fromModel(user)} />
+        {children}
       </DialogContent>
     </Dialog>
   );

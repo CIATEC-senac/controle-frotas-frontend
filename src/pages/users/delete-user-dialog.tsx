@@ -16,8 +16,11 @@ import {
 } from '@/components/ui/dialog';
 import { User } from '@/models/user.type';
 import { API } from '@/lib/api';
+import { useState } from 'react';
 
 export const DeleteUserDialog = ({ user }: { user: User }) => {
+  const [open, setOpen] = useState(false);
+
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
@@ -30,16 +33,17 @@ export const DeleteUserDialog = ({ user }: { user: User }) => {
           toast.error('Não foi possível excluir usuário');
         }
 
-        console.error(e);
+        setOpen(false);
       },
       onSuccess: () => {
         queryClient.invalidateQueries(['users']);
+        setOpen(false);
       },
     }
   );
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="destructive" size="icon" children={<Trash2 />} />
       </DialogTrigger>

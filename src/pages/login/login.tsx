@@ -3,13 +3,15 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import { Eye, EyeClosed, Lock, UserRound } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
+import { format } from '@react-input/mask';
+import { AxiosError } from 'axios';
 
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { API } from '@/lib/api';
+
 import { LoginForm } from './login.types';
-import { AxiosError } from 'axios';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -32,8 +34,6 @@ export const LoginPage = () => {
           // Mensagem genérica
           toast.error('Não foi possível fazer login');
         }
-
-        console.error(e);
       },
       onSuccess: (token) => {
         // Salvar token
@@ -66,6 +66,11 @@ export const LoginPage = () => {
     return !isVisible ? <EyeClosed {...props} /> : <Eye {...props} />;
   };
 
+  const maskedCPF = format(state.cpf, {
+    mask: '___.___.___-__',
+    replacement: { _: /\d/ },
+  });
+
   return (
     <main className="flex flex-col justify-center items-center gap-6 p-6 h-full">
       <form onSubmit={onSubmit}>
@@ -81,8 +86,9 @@ export const LoginPage = () => {
             <TextField
               className="text-white w-[300px]"
               name="cpf"
+              value={maskedCPF}
               onChange={onChange}
-              maxLength={11}
+              maxLength={14}
               label="Usuário (CPF)"
               labelProps={{ className: 'text-white' }}
               disabled={isLoading}
@@ -93,6 +99,7 @@ export const LoginPage = () => {
             <TextField
               className="text-white w-[300px]"
               name="password"
+              value={state.password}
               onChange={onChange}
               label="Senha"
               labelProps={{ className: 'text-white' }}

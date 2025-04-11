@@ -1,3 +1,5 @@
+import { Enterprise } from './enterprise';
+
 export type User = {
   id: number;
   registry: string;
@@ -8,4 +10,5 @@ export type User = {
   cnh?: string;
   status: boolean;
   admittedAt: string;
+  enterprise?: Enterprise;
 };
