@@ -7,45 +7,43 @@ import { Layout } from '@/components/layout/layout';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
 import { DataTable } from '@/components/layout/data-table';
-import { maskedCPF, User } from '@/models/user.type';
+import { Vehicle } from '@/models/vehicle.type';
 
-import { CreateUserDialog } from './create-dialog';
-import { EditUserDialog } from './edit-dialog';
-import { DeleteUserDialog } from './delete-dialog';
+import { CreateVehicleDialog } from './create-dialog';
+import { EditVehicleDialog } from './edit-dialog';
+import { DeleteVehicleDialog } from './delete-dialog';
 import { filter } from './filter';
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<Vehicle>[] = [
   {
-    accessorKey: 'registry',
-    header: 'Matrícula',
+    accessorKey: 'model',
+    header: 'Modelo',
   },
   {
-    accessorKey: 'name',
-    header: 'Nome',
+    accessorKey: 'year',
+    header: 'Ano',
   },
   {
-    header: 'CPF',
-    cell: ({ row }) => maskedCPF(row.original.cpf),
-  },
-  {
-    accessorKey: 'email',
-    header: 'E-mail',
+    accessorKey: 'type',
+    header: 'Tipo',
   },
   {
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex gap-2 justify-end">
-        <EditUserDialog user={row.original} />
-        <DeleteUserDialog user={row.original} />
+        <EditVehicleDialog vehicle={row.original} />
+        <DeleteVehicleDialog vehicle={row.original} />
       </div>
     ),
   },
 ];
 
-export const UsersPage = () => {
+export const VehiclesPage = () => {
   const [search, setSearch] = useState('');
 
-  const { data, isLoading } = useQuery(['users'], () => new API().getUsers());
+  const { data, isLoading } = useQuery(['vehicles'], () =>
+    new API().getVehicles()
+  );
 
   const getChildren = () => {
     if (isLoading) {
@@ -66,7 +64,7 @@ export const UsersPage = () => {
   };
 
   return (
-    <Layout title="Usuários">
+    <Layout title="Veículos">
       <div className="flex flex-col gap-y-3">
         <div className="flex flex-wrap gap-3 place-content-between">
           <TextField
@@ -74,10 +72,10 @@ export const UsersPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             prefixIcon={<Search size={16} />}
-            placeholder="Busque por nome, cpf ou e-mail..."
+            placeholder="Busque por modelo..."
           />
 
-          <CreateUserDialog />
+          <CreateVehicleDialog />
         </div>
 
         {getChildren()}

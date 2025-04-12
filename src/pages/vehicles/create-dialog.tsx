@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { fromModel, UserForm } from '@/pages/users/user-form';
 import { FormDialog } from '@/components/layout/form-dialog';
 
-export const CreateUserDialog = () => {
+import { fromModel, VehicleForm } from './form';
+
+export const CreateVehicleDialog = () => {
   const [open, setOpen] = useState(false);
 
   const close = () => setOpen(false);
@@ -13,7 +14,7 @@ export const CreateUserDialog = () => {
   const trigger = (
     <Button className="h-[40px]">
       <Plus />
-      Novo usuário
+      Novo veículo
     </Button>
   );
 
@@ -21,10 +22,10 @@ export const CreateUserDialog = () => {
     <FormDialog
       open={open}
       onOpenChange={setOpen}
-      title="Novo Usuário"
+      title="Novo Veículo"
       trigger={trigger}
     >
-      <UserForm onSuccess={close} onFailure={close} user={fromModel()} />
+      <VehicleForm onSuccess={close} onFailure={close} vehicle={fromModel()} />
     </FormDialog>
   );
 };

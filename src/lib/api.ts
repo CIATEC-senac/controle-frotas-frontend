@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { Http } from './http';
 import { Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
+import { Vehicle } from '@/models/vehicle.type';
 
 export class API {
   public readonly http: Http;
@@ -41,6 +42,27 @@ export class API {
   public async deleteUser(user: User) {
     return await this.http
       .request<User>(`/user/${user.id}`, {
+        method: 'DELETE',
+      })
+      .then(({ data }) => data);
+  }
+
+  public async getVehicles() {
+    return this.http.request<Vehicle[]>('/vehicle').then(({ data }) => data);
+  }
+
+  public async updateVehicle(vehicle: Vehicle) {
+    return await this.http
+      .request<Vehicle>('/vehicle', {
+        method: vehicle.id ? 'PATCH' : 'POST',
+        data: vehicle,
+      })
+      .then(({ data }) => data);
+  }
+
+  public async deleteVehicle(vehicle: Vehicle) {
+    return await this.http
+      .request<Vehicle>(`/user/${vehicle.id}`, {
         method: 'DELETE',
       })
       .then(({ data }) => data);

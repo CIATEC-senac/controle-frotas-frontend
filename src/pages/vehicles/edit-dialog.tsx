@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { PenLine } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { User } from '@/models/user.type';
+import { Vehicle } from '@/models/vehicle.type';
 import { FormDialog } from '@/components/layout/form-dialog';
 
-import { fromModel, UserForm } from './user-form';
+import { fromModel, VehicleForm } from './form';
 
-export const EditUserDialog = ({ user }: { user: User }) => {
+export const EditVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
   const [open, setOpen] = useState(false);
 
   const close = () => setOpen(false);
@@ -18,10 +18,14 @@ export const EditUserDialog = ({ user }: { user: User }) => {
     <FormDialog
       open={open}
       onOpenChange={setOpen}
-      title="Editar Usuário"
+      title="Editar Veículo"
       trigger={trigger}
     >
-      <UserForm onSuccess={close} onFailure={close} user={fromModel(user)} />
+      <VehicleForm
+        onSuccess={close}
+        onFailure={close}
+        vehicle={fromModel(vehicle)}
+      />
     </FormDialog>
   );
 };
