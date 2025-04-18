@@ -7,6 +7,7 @@ export type Vehicle = {
   plate: string;
   year: number;
   type: string;
+  status: boolean;
 };
 
 export const maskedNumber = (number: number | undefined, length: number) =>

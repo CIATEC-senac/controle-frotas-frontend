@@ -4,6 +4,7 @@ import { Http } from './http';
 import { Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
+import { AxiosError } from 'axios';
 
 export class API {
   public readonly http: Http;
@@ -13,13 +14,27 @@ export class API {
     this.http = new Http(`http://${location.hostname}:3000`);
   }
 
+  static handleError(e: Error) {
+    if (e instanceof AxiosError) {
+      const apiMessage = e.response?.data?.message;
+
+      if (apiMessage != undefined) {
+        return Array.isArray(apiMessage) ? apiMessage.at(0) : apiMessage;
+      }
+
+      return e.message;
+    }
+
+    return null;
+  }
+
   public async login(cpf: string, password: string): Promise<string> {
     return this.http
       .request('/auth/login', {
         method: 'POST',
         data: { cpf, password },
       })
-      .then(({ data }) => data.access_token);
+      .then(({ data }) => data.token);
   }
 
   public async getUsers() {

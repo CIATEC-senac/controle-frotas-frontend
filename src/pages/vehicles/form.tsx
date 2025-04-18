@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from 'react-query';
-import { AxiosError } from 'axios';
 
 import { TextField } from '@/components/layout/textfield';
+import { Loading } from '@/components/layout/loading';
 import { Button } from '@/components/ui/button';
 import { API } from '@/lib/api';
+import { toastOptions } from '@/lib/toast.options';
 import { maskedNumber, Vehicle } from '@/models/vehicle.type';
+import { FormAttr } from '@/types/form';
 
 export const fromModel = (vehicle?: Vehicle) => {
   return {
@@ -16,51 +18,44 @@ export const fromModel = (vehicle?: Vehicle) => {
     plate: vehicle?.plate,
     type: vehicle?.type,
     year: vehicle?.year,
+    status: vehicle?.status || true,
   } as Vehicle;
 };
 
-type VehicleFormAttr = {
-  vehicle: Vehicle;
-  onSuccess: VoidFunction;
-  onFailure: VoidFunction;
-};
-
 export const VehicleForm = ({
-  vehicle,
+  data,
   onSuccess,
   onFailure,
-}: VehicleFormAttr) => {
+}: FormAttr<Vehicle>) => {
   const queryClient = useQueryClient();
 
-  const [state, setState] = useState(vehicle);
+  const [state, setState] = useState(data);
 
   const { mutate, isLoading } = useMutation(
     (vehicle: Vehicle) => new API().updateVehicle(vehicle),
     {
       onError: (e: any) => {
-        const options = { onClose: () => onFailure() };
+        const options = toastOptions({ onClose: onFailure });
 
-        if (e instanceof AxiosError) {
-          let message = e.message;
+        console.log(state);
 
-          const apiMessage = e.response?.data?.message;
+        const message =
+          API.handleError(e) ?? state.id != undefined
+            ? 'Não foi possível editar veículo'
+            : 'Não foi possível adicionar veículo';
 
-          if (apiMessage != undefined) {
-            message = Array.isArray(apiMessage) ? apiMessage.at(0) : apiMessage;
-          }
-
-          toast.error(message, options);
-        } else {
-          toast.error(
-            state.id
-              ? 'Não foi possível adicionar veículo'
-              : 'Não foi possível editar veículo',
-            options
-          );
-        }
+        toast.error(message, options);
       },
       onSuccess: () => {
         queryClient.invalidateQueries(['vehicles']);
+
+        toast.success(
+          state.id != undefined
+            ? 'Veículo editado com sucesso'
+            : 'Veículo adicionado com sucesso',
+          toastOptions()
+        );
+
         onSuccess();
       },
     }
@@ -77,6 +72,8 @@ export const VehicleForm = ({
 
   return (
     <form onSubmit={onSubmit}>
+      <Loading className="mb-6" loading={isLoading} />
+
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-6">
           <TextField
@@ -114,7 +111,7 @@ export const VehicleForm = ({
           />
         </div>
 
-        <div className="w-full flex gap-6 justify-end">
+        <div className="w-full flex gap-3 justify-end">
           <Button
             disabled={isLoading}
             variant="secondary"

@@ -6,6 +6,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Layout } from '@/components/layout/layout';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
+import { normalizeString } from '@/lib/normalize';
 import { DataTable } from '@/components/layout/data-table';
 import { maskedCPF, User } from '@/models/user.type';
 
@@ -16,7 +17,7 @@ import { filter } from './filter';
 
 const columns: ColumnDef<User>[] = [
   {
-    accessorKey: 'registry',
+    accessorKey: 'registration',
     header: 'Matrícula',
   },
   {
@@ -59,7 +60,7 @@ export const UsersPage = () => {
     return (
       <DataTable
         columns={columns}
-        data={data.filter(filter(search))}
+        data={data.filter(filter(normalizeString(search)))}
         empty="Nenhum resultado encontrado"
       />
     );

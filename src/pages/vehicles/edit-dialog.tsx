@@ -24,7 +24,7 @@ export const EditVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
       <VehicleForm
         onSuccess={close}
         onFailure={close}
-        vehicle={fromModel(vehicle)}
+        data={fromModel(vehicle)}
       />
     </FormDialog>
   );

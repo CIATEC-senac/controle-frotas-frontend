@@ -5,8 +5,9 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { Layout } from '@/components/layout/layout';
 import { TextField } from '@/components/layout/textfield';
-import { API } from '@/lib/api';
 import { DataTable } from '@/components/layout/data-table';
+import { API } from '@/lib/api';
+import { normalizeString } from '@/lib/normalize';
 import { Vehicle } from '@/models/vehicle.type';
 
 import { CreateVehicleDialog } from './create-dialog';
@@ -57,7 +58,7 @@ export const VehiclesPage = () => {
     return (
       <DataTable
         columns={columns}
-        data={data.filter(filter(search))}
+        data={data.filter(filter(normalizeString(search)))}
         empty="Nenhum resultado encontrado"
       />
     );
@@ -72,7 +73,7 @@ export const VehiclesPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             prefixIcon={<Search size={16} />}
-            placeholder="Busque por modelo..."
+            placeholder="Busque por modelo ou placa..."
           />
 
           <CreateVehicleDialog />

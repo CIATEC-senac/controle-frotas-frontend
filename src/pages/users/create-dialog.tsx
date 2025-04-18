@@ -24,7 +24,7 @@ export const CreateUserDialog = () => {
       title="Novo Usuário"
       trigger={trigger}
     >
-      <UserForm onSuccess={close} onFailure={close} user={fromModel()} />
+      <UserForm onSuccess={close} onFailure={close} data={fromModel()} />
     </FormDialog>
   );
 };

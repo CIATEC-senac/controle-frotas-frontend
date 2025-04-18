@@ -21,7 +21,7 @@ export const EditUserDialog = ({ user }: { user: User }) => {
       title="Editar Usuário"
       trigger={trigger}
     >
-      <UserForm onSuccess={close} onFailure={close} user={fromModel(user)} />
+      <UserForm onSuccess={close} onFailure={close} data={fromModel(user)} />
     </FormDialog>
   );
 };

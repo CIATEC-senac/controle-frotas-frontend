@@ -1,64 +1,56 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from 'react-query';
-import { AxiosError } from 'axios';
 
+import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { maskedAdmittedAt, maskedCPF, User } from '@/models/user.type';
 import { API } from '@/lib/api';
+import { toastOptions } from '@/lib/toast.options';
+import { FormAttr } from '@/types/form';
 
 export const fromModel = (user?: User) => {
   return {
     id: user?.id,
-    registry: user?.registry,
+    registration: user?.registration,
     name: user?.name,
     email: user?.email,
     cpf: user?.cpf,
     cnh: user?.cnh,
     admittedAt: user?.admittedAt,
-    status: user?.status,
+    status: user?.status || true,
   } as User;
 };
 
-type UserFormAttr = {
-  user: User;
-  onSuccess: VoidFunction;
-  onFailure: VoidFunction;
-};
-
-export const UserForm = ({ user, onSuccess, onFailure }: UserFormAttr) => {
+export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
   const queryClient = useQueryClient();
 
-  const [state, setState] = useState(user);
+  const [state, setState] = useState(data);
 
   const { mutate, isLoading } = useMutation(
     (user: User) => new API().updateUser(user),
     {
       onError: (e: any) => {
-        const options = { onClose: () => onFailure() };
+        const options = toastOptions({ onClose: onFailure });
 
-        if (e instanceof AxiosError) {
-          let message = e.message;
+        const message =
+          API.handleError(e) ?? state.id != undefined
+            ? 'Não foi possível editar usuário'
+            : 'Não foi possível adicionar usuário';
 
-          const apiMessage = e.response?.data?.message;
-
-          if (apiMessage != undefined) {
-            message = Array.isArray(apiMessage) ? apiMessage.at(0) : apiMessage;
-          }
-
-          toast.error(message, options);
-        } else {
-          toast.error(
-            state.id
-              ? 'Não foi possível adicionar usuário'
-              : 'Não foi possível editar usuário',
-            options
-          );
-        }
+        toast.error(message, options);
       },
       onSuccess: () => {
         queryClient.invalidateQueries(['users']);
+
+        toast.success(
+          state.id != undefined
+            ? 'Usuário editado com sucesso'
+            : 'Usuário adicionado com sucesso',
+          toastOptions()
+        );
+
         onSuccess();
       },
     }
@@ -66,7 +58,7 @@ export const UserForm = ({ user, onSuccess, onFailure }: UserFormAttr) => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate({ ...state, status: true });
+    mutate({ ...state, cpf: state.cpf?.replace(/[.-]/g, '') });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,13 +67,15 @@ export const UserForm = ({ user, onSuccess, onFailure }: UserFormAttr) => {
 
   return (
     <form onSubmit={onSubmit}>
+      <Loading className="mb-6" loading={isLoading} />
+
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-6">
           <TextField
             onChange={onChange}
             id="registry"
             label="Matrícula"
-            value={state.registry}
+            value={state.registration}
             disabled={isLoading}
           />
 
@@ -129,7 +123,7 @@ export const UserForm = ({ user, onSuccess, onFailure }: UserFormAttr) => {
           />
         </div>
 
-        <div className="w-full flex gap-6 justify-end">
+        <div className="w-full flex gap-3 justify-end">
           <Button
             disabled={isLoading}
             variant="secondary"

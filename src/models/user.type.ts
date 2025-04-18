@@ -5,7 +5,7 @@ import { Enterprise } from './enterprise';
 
 export type User = {
   id: number;
-  registry: string;
+  registration: string;
   name: string;
   cpf: string;
   email: string;
@@ -16,8 +16,8 @@ export type User = {
   enterprise?: Enterprise;
 };
 
-export const maskedCPF = (cpf: string) =>
-  format(cpf, {
+export const maskedCPF = (cpf: string | undefined) =>
+  format(cpf ?? '', {
     mask: '___.___.___-__',
     replacement: { _: /\d/ },
   });

@@ -25,7 +25,7 @@ export const CreateVehicleDialog = () => {
       title="Novo Veículo"
       trigger={trigger}
     >
-      <VehicleForm onSuccess={close} onFailure={close} vehicle={fromModel()} />
+      <VehicleForm onSuccess={close} onFailure={close} data={fromModel()} />
     </FormDialog>
   );
 };

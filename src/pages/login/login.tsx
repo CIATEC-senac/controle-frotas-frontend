@@ -53,7 +53,7 @@ export const LoginPage = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(state);
+    mutate({ ...state, cpf: state.cpf.replace(/[.-]/g, '') });
   };
 
   const PasswordVisibilityIcon = () => {

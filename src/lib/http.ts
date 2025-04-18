@@ -26,7 +26,8 @@ export class Http {
   }
 
   private defaultHeaders() {
-    const token = sessionStorage.getItem('token');
+    const token =
+      sessionStorage.getItem('token') || localStorage.getItem('token');
 
     return {
       'Content-Type': 'application/json',
