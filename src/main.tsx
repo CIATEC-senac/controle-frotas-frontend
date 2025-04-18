@@ -11,7 +11,8 @@ import { App } from './App';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 60 * 5,
+      // 1 minuto
+      refetchInterval: 1 * 60 * 1000,
       retryOnMount: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

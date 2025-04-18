@@ -5,65 +5,73 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { Layout } from '@/components/layout/layout';
 import { TextField } from '@/components/layout/textfield';
+import { DataTable } from '@/components/layout/data-table';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
-import { DataTable } from '@/components/layout/data-table';
-import { maskedCPF, User } from '@/models/user.type';
+import { Vehicle } from '@/models/vehicle.type';
+import { LoadingMessage } from '@/components/layout/loading-message';
+import { FetchError } from '@/components/layout/fetch-error';
+import { CreateButton } from '@/components/layout/create-button';
+import { EditButton } from '@/components/layout/edit-button';
 
 import { FormDialog } from './form-dialog';
-import { DeleteUserDialog } from './delete-dialog';
-import { CreateButton } from '../../components/layout/create-button';
-import { EditButton } from '../../components/layout/edit-button';
+import { DeleteVehicleDialog } from './delete-dialog';
 import { filter } from './filter';
-import { FetchError } from '@/components/layout/fetch-error';
-import { LoadingMessage } from '@/components/layout/loading-message';
 
-const columns: ColumnDef<User>[] = [
+const columns: ColumnDef<Vehicle>[] = [
   {
-    accessorKey: 'registration',
-    header: 'Matrícula',
+    accessorKey: 'model',
+    header: 'Modelo',
   },
   {
-    accessorKey: 'name',
-    header: 'Nome',
+    accessorKey: 'year',
+    header: 'Ano',
   },
   {
-    header: 'CPF',
-    cell: ({ row }) => maskedCPF(row.original.cpf),
+    accessorKey: 'type',
+    header: 'Tipo',
   },
   {
-    accessorKey: 'email',
-    header: 'E-mail',
+    accessorKey: 'plate',
+    header: 'Placa',
+  },
+  {
+    header: 'Empresa',
+    cell: ({ row }) => row.original.enterprise?.name ?? 'N/A',
   },
   {
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex gap-2 justify-end">
         <FormDialog
+          title="Editar Veículo"
           trigger={<EditButton />}
-          title="Editar Usuário"
-          user={row.original}
+          vehicle={row.original}
         />
-        <DeleteUserDialog user={row.original} />
+        <DeleteVehicleDialog vehicle={row.original} />
       </div>
     ),
   },
 ];
 
-export const UsersPage = () => {
+export const VehiclesPage = () => {
   const [search, setSearch] = useState('');
 
-  const { data, isLoading, error, refetch } = useQuery(['users'], () =>
-    new API().getUsers()
-  );
+  const {
+    data: vehicles,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery(['vehicles'], () => new API().getVehicles());
+
+  useQuery(['enterprises'], () => new API().getEnterprises());
 
   const getChildren = () => {
     if (error) {
-      // em caso de erro, tentar novamente
       return (
         <FetchError
-          message="Não foi possível listar usuários"
-          onClick={() => refetch()}
+          message="Não foi possível listar veículos"
+          onClick={refetch}
         />
       );
     }
@@ -72,21 +80,17 @@ export const UsersPage = () => {
       return <LoadingMessage />;
     }
 
-    if (!data) {
-      return null;
-    }
-
     return (
       <DataTable
         columns={columns}
-        data={data.filter(filter(normalizeString(search)))}
+        data={(vehicles || []).filter(filter(normalizeString(search)))}
         empty="Nenhum resultado encontrado"
       />
     );
   };
 
   return (
-    <Layout title="Usuários">
+    <Layout title="Veículos">
       <div className="flex flex-col gap-y-3">
         <div className="flex flex-wrap gap-3 place-content-between">
           <TextField
@@ -94,12 +98,12 @@ export const UsersPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             prefixIcon={<Search size={16} />}
-            placeholder="Busque por nome, cpf ou e-mail..."
+            placeholder="Busque por modelo ou placa..."
           />
 
           <FormDialog
-            trigger={<CreateButton title="Novo usuário" />}
-            title="Novo Usuário"
+            title="Novo veículo"
+            trigger={<CreateButton title="Novo veículo" />}
           />
         </div>
 

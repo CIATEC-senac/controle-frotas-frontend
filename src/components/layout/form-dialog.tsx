@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import { JSX, ReactNode } from 'react';
+
 import {
   Dialog,
   DialogContent,
@@ -17,12 +18,13 @@ export const FormDialog = ({
   title: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  trigger: ReactNode;
+  trigger: JSX.Element;
   children: ReactNode;
 }) => {
+  const newLocal = <DialogTrigger asChild>{trigger}</DialogTrigger>;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {newLocal}
 
       <DialogContent className="max-h-[100%] overflow-auto h-full min-w-full rounded-none md:h-auto md:min-w-auto md:rounded-lg">
         <DialogHeader>
