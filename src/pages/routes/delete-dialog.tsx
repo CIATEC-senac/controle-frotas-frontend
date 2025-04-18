@@ -16,27 +16,31 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { API } from '@/lib/api';
-import { Vehicle } from '@/models/vehicle.type';
+import { getName, Route } from '@/models/route.type';
 
-export const DeleteVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
+type DeleteRouteDialogAttr = {
+  route: Route;
+};
+
+export const DeleteRouteDialog = ({ route }: DeleteRouteDialogAttr) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    (vehicle: Vehicle) => new API().deleteVehicle(vehicle),
+    (route: Route) => new API().deleteRoute(route),
     {
       onError: (e: any) => {
         if (e instanceof AxiosError) {
           toast.error(e.response?.data?.message ?? e.message);
         } else {
-          toast.error('Não foi possível excluir veículo');
+          toast.error('Não foi possível excluir rota');
         }
 
         setOpen(false);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(['vehicles']);
+        queryClient.invalidateQueries(['routes']);
         setOpen(false);
       },
     }
@@ -46,7 +50,7 @@ export const DeleteVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          disabled={!vehicle.status}
+          disabled={!route.status}
           variant="destructive"
           size="icon"
           children={<Trash2 />}
@@ -55,11 +59,11 @@ export const DeleteVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-left">Excluir Veículo</DialogTitle>
+          <DialogTitle className="text-left">Excluir Rota</DialogTitle>
 
           <DialogDescription className="text-left">
             <p className="py-4">
-              Deseja mesmo excluir <b>{vehicle.model}</b>? Essa ação não pode
+              Deseja mesmo excluir <b>{getName(route)}</b>? Essa ação não pode
               ser desfeita.
             </p>
           </DialogDescription>
@@ -78,7 +82,7 @@ export const DeleteVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
               variant="ghost"
               size="sm"
               disabled={isLoading}
-              onClick={() => mutate(vehicle)}
+              onClick={() => mutate(route)}
             >
               Sim
             </Button>

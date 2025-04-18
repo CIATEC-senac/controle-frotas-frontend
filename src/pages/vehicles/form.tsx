@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -105,6 +106,7 @@ export const VehicleForm = ({
             id="plate"
             label="Placa"
             value={state.plate}
+            placeholder="AAA0000"
             disabled={isLoading}
           />
 
@@ -113,6 +115,7 @@ export const VehicleForm = ({
             id="year"
             label="Ano"
             value={maskedNumber(state.year, 4)}
+            placeholder={dayjs().year().toString()}
             maxLength={4}
             disabled={isLoading}
           />
@@ -122,6 +125,7 @@ export const VehicleForm = ({
             id="capacity"
             label="Capacidade"
             value={maskedNumber(state.capacity, 2)}
+            placeholder="5"
             maxLength={2}
             disabled={isLoading}
           />

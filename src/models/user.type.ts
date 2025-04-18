@@ -9,7 +9,7 @@ export type User = {
   name: string;
   cpf: string;
   email: string;
-  role: string;
+  role: number;
   cnh?: string;
   status: boolean;
   admittedAt: string;

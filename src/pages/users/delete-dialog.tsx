@@ -45,7 +45,12 @@ export const DeleteUserDialog = ({ user }: { user: User }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="icon" children={<Trash2 />} />
+        <Button
+          disabled={!user.status}
+          variant="destructive"
+          size="icon"
+          children={<Trash2 />}
+        />
       </DialogTrigger>
 
       <DialogContent>

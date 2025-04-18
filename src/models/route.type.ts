@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { User } from './user.type';
 import { Vehicle } from './vehicle.type';
 
@@ -10,8 +11,31 @@ export type RoutePath = {
 export type Route = {
   id?: number;
   estimatedDuration: number;
-  elapsedDistance: number;
+  estimatedDistance: number;
   path: RoutePath;
   vehicle: Vehicle;
   driver: User;
+  startAt: string;
+  status: boolean;
+};
+
+export const getNeighborhood = (path: string) => {
+  return path.split('-').at(1)?.toUpperCase();
+};
+
+export const getEstimatedArrivalDate = (route: Route) => {
+  const [hours, minutes] = (route.startAt ?? '').split(':');
+
+  return dayjs()
+    .set('hour', Number(hours ?? 0))
+    .set('minutes', Number(minutes ?? 0))
+    .add(route.estimatedDuration, 'seconds')
+    .format('HH:mm');
+};
+
+export const getName = (route: Route) => {
+  const originNeighborhood = getNeighborhood(route.path.origin);
+  const destinationNeighborhood = getNeighborhood(route.path.destination);
+
+  return `${originNeighborhood} - ${destinationNeighborhood}`;
 };

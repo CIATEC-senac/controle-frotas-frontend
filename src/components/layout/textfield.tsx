@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import * as LabelPrimitive from '@radix-ui/react-label';
 
-type TextFieldAtrr = React.ComponentProps<'input'> & {
+export type TextFieldAtrr = React.ComponentProps<'input'> & {
   label?: string;
   labelProps?: React.ComponentProps<typeof LabelPrimitive.Root>;
   prefixIcon?: ReactNode;

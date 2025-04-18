@@ -100,6 +100,23 @@ export class API {
       .then(({ data }) => data);
   }
 
+  public async updateRoute(route: Route) {
+    return await this.http
+      .request<Route>('/route', {
+        method: route.id ? 'PATCH' : 'POST',
+        data: route,
+      })
+      .then(({ data }) => data);
+  }
+
+  public async deleteRoute(route: Route) {
+    return await this.http
+      .request<Route>(`/route/${route.id}`, {
+        method: 'DELETE',
+      })
+      .then(({ data }) => data);
+  }
+
   public async getEnterprises() {
     return this.http
       .request<Enterprise[]>('/enterprise')

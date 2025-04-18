@@ -20,6 +20,10 @@ import { FormDialog } from './form-dialog';
 
 const columns: ColumnDef<Vehicle>[] = [
   {
+    accessorKey: 'plate',
+    header: 'Placa',
+  },
+  {
     accessorKey: 'model',
     header: 'Modelo',
   },
@@ -32,8 +36,8 @@ const columns: ColumnDef<Vehicle>[] = [
     header: 'Tipo',
   },
   {
-    accessorKey: 'plate',
-    header: 'Placa',
+    header: 'Capacidade',
+    cell: ({ row }) => `${row.original.capacity} lugares`,
   },
   {
     header: 'Empresa',
