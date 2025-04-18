@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 export const Layout = ({
   children,

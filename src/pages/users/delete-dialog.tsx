@@ -1,6 +1,7 @@
-import { Trash2 } from 'lucide-react';
-import { useMutation, useQueryClient } from 'react-query';
 import { AxiosError } from 'axios';
+import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
@@ -14,9 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { User } from '@/models/user.type';
 import { API } from '@/lib/api';
-import { useState } from 'react';
+import { User } from '@/models/user.type';
 
 export const DeleteUserDialog = ({ user }: { user: User }) => {
   const [open, setOpen] = useState(false);

@@ -1,8 +1,8 @@
+import { AxiosError } from 'axios';
+import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
-import { Trash2 } from 'lucide-react';
-import { AxiosError } from 'axios';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,8 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Vehicle } from '@/models/vehicle.type';
 import { API } from '@/lib/api';
+import { Vehicle } from '@/models/vehicle.type';
 
 export const DeleteVehicleDialog = ({ vehicle }: { vehicle: Vehicle }) => {
   const [open, setOpen] = useState(false);

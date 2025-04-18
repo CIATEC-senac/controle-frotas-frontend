@@ -1,4 +1,5 @@
 import { format } from '@react-input/mask';
+
 import { Enterprise } from './enterprise';
 
 export type Vehicle = {

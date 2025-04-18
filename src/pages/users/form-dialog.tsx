@@ -1,8 +1,8 @@
-import { ReactNode, useState } from 'react';
+import { JSX, useState } from 'react';
 
-import { fromModel, UserForm } from '@/pages/users/form';
 import { FormDialog as BaseFormDialog } from '@/components/layout/form-dialog';
 import { User } from '@/models/user.type';
+import { fromModel, UserForm } from '@/pages/users/form';
 
 export const FormDialog = ({
   title,
@@ -10,7 +10,7 @@ export const FormDialog = ({
   user,
 }: {
   title: string;
-  trigger: ReactNode;
+  trigger: JSX.Element;
   user?: User;
 }) => {
   const [open, setOpen] = useState(false);

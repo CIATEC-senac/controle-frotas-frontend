@@ -1,18 +1,18 @@
+import { format } from '@react-input/mask';
+import { AxiosError } from 'axios';
+import { Eye, EyeClosed, Lock, UserRound } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { Eye, EyeClosed, Lock, UserRound } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
-import { format } from '@react-input/mask';
-import { AxiosError } from 'axios';
 
+import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { API } from '@/lib/api';
 
 import { LoginForm } from './login.types';
-import { Loading } from '@/components/layout/loading';
 
 export const LoginPage = () => {
   const navigate = useNavigate();

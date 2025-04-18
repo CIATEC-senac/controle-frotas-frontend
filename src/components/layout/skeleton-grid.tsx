@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { SkeletonCard } from './skeleton-card';
 
 export const SkeletonGrid = ({ length = 3 }: { length?: number }) => {

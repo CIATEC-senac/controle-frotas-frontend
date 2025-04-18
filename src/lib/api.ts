@@ -1,11 +1,12 @@
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
-import { Http } from './http';
+import { Enterprise } from '@/models/enterprise';
 import { Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
-import { Enterprise } from '@/models/enterprise';
+
+import { Http } from './http';
 
 export class API {
   public readonly http: Http;

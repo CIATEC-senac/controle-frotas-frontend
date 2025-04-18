@@ -1,7 +1,7 @@
 import { ArrowRight, CircleUserRound, Map } from 'lucide-react';
 
-import { Route } from '@/models/route.type';
 import { Card, CardContent } from '@/components/ui/card';
+import { Route } from '@/models/route.type';
 
 export const RouteCard = ({ route }: { route: Route }) => {
   const getStreet = (path: string) =>

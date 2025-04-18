@@ -1,22 +1,22 @@
+import { ColumnDef } from '@tanstack/react-table';
+import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { Search } from 'lucide-react';
-import { ColumnDef } from '@tanstack/react-table';
 
+import { CreateButton } from '@/components/layout/create-button';
+import { DataTable } from '@/components/layout/data-table';
+import { EditButton } from '@/components/layout/edit-button';
+import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
+import { LoadingMessage } from '@/components/layout/loading-message';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
-import { DataTable } from '@/components/layout/data-table';
 import { maskedCPF, User } from '@/models/user.type';
 
-import { FormDialog } from './form-dialog';
 import { DeleteUserDialog } from './delete-dialog';
-import { CreateButton } from '../../components/layout/create-button';
-import { EditButton } from '../../components/layout/edit-button';
 import { filter } from './filter';
-import { FetchError } from '@/components/layout/fetch-error';
-import { LoadingMessage } from '@/components/layout/loading-message';
+import { FormDialog } from './form-dialog';
 
 const columns: ColumnDef<User>[] = [
   {

@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
-import { maskedAdmittedAt, maskedCPF, User } from '@/models/user.type';
 import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
+import { maskedAdmittedAt, maskedCPF, User } from '@/models/user.type';
 import { FormAttr } from '@/types/form';
 
 export const fromModel = (user?: User) => {

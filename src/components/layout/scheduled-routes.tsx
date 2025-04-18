@@ -1,10 +1,10 @@
-import { useQuery } from 'react-query';
 import dayjs from 'dayjs';
+import { useQuery } from 'react-query';
 
-import { API } from '@/lib/api';
-import { SkeletonGrid } from '@/components/layout/skeleton-grid';
-import { RouteCard } from '@/components/layout/route-card';
 import { FetchError } from '@/components/layout/fetch-error';
+import { RouteCard } from '@/components/layout/route-card';
+import { SkeletonGrid } from '@/components/layout/skeleton-grid';
+import { API } from '@/lib/api';
 
 export const ScheduledRoutes = () => {
   // Busca pela queryKey "scheduled-routes" no queryClient
