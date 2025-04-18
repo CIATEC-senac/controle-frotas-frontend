@@ -10,10 +10,13 @@ import { normalizeString } from '@/lib/normalize';
 import { DataTable } from '@/components/layout/data-table';
 import { maskedCPF, User } from '@/models/user.type';
 
-import { CreateUserDialog } from './create-dialog';
-import { EditUserDialog } from './edit-dialog';
+import { FormDialog } from './form-dialog';
 import { DeleteUserDialog } from './delete-dialog';
+import { CreateButton } from '../../components/layout/create-button';
+import { EditButton } from '../../components/layout/edit-button';
 import { filter } from './filter';
+import { FetchError } from '@/components/layout/fetch-error';
+import { LoadingMessage } from '@/components/layout/loading-message';
 
 const columns: ColumnDef<User>[] = [
   {
@@ -36,7 +39,11 @@ const columns: ColumnDef<User>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex gap-2 justify-end">
-        <EditUserDialog user={row.original} />
+        <FormDialog
+          trigger={<EditButton />}
+          title="Editar Usuário"
+          user={row.original}
+        />
         <DeleteUserDialog user={row.original} />
       </div>
     ),
@@ -46,11 +53,23 @@ const columns: ColumnDef<User>[] = [
 export const UsersPage = () => {
   const [search, setSearch] = useState('');
 
-  const { data, isLoading } = useQuery(['users'], () => new API().getUsers());
+  const { data, isLoading, error, refetch } = useQuery(['users'], () =>
+    new API().getUsers()
+  );
 
   const getChildren = () => {
+    if (error) {
+      // em caso de erro, tentar novamente
+      return (
+        <FetchError
+          message="Não foi possível listar usuários"
+          onClick={() => refetch()}
+        />
+      );
+    }
+
     if (isLoading) {
-      return <div className="flex py-6">Carregando...</div>;
+      return <LoadingMessage />;
     }
 
     if (!data) {
@@ -78,7 +97,10 @@ export const UsersPage = () => {
             placeholder="Busque por nome, cpf ou e-mail..."
           />
 
-          <CreateUserDialog />
+          <FormDialog
+            trigger={<CreateButton title="Novo usuário" />}
+            title="Novo Usuário"
+          />
         </div>
 
         {getChildren()}

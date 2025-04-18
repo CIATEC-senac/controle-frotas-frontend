@@ -1,4 +1,5 @@
 import { format } from '@react-input/mask';
+import { Enterprise } from './enterprise';
 
 export type Vehicle = {
   id: number;
@@ -8,6 +9,7 @@ export type Vehicle = {
   year: number;
   type: string;
   status: boolean;
+  enterprise?: Partial<Enterprise>;
 };
 
 export const maskedNumber = (number: number | undefined, length: number) =>

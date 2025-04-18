@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { API } from '@/lib/api';
 import { SkeletonGrid } from '@/components/layout/skeleton-grid';
 import { RouteCard } from '@/components/layout/route-card';
-import { ErrorLoadingRoutes } from '@/components/layout/error-loading-routes';
+import { FetchError } from '@/components/layout/fetch-error';
 
 export const ScheduledRoutes = () => {
   // Busca pela queryKey "scheduled-routes" no queryClient
@@ -24,7 +24,9 @@ export const ScheduledRoutes = () => {
   const getChildren = () => {
     if (error) {
       // em caso de erro, tentar novamente
-      return <ErrorLoadingRoutes onClick={() => refetch()} />;
+      return (
+        <FetchError message="Não foi possível listar rotas" onClick={refetch} />
+      );
     }
 
     if (isLoading) {

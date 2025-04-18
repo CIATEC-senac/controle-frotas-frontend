@@ -9,9 +9,12 @@ import { DataTable } from '@/components/layout/data-table';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
 import { Vehicle } from '@/models/vehicle.type';
+import { LoadingMessage } from '@/components/layout/loading-message';
+import { FetchError } from '@/components/layout/fetch-error';
+import { CreateButton } from '@/components/layout/create-button';
+import { EditButton } from '@/components/layout/edit-button';
 
-import { CreateVehicleDialog } from './create-dialog';
-import { EditVehicleDialog } from './edit-dialog';
+import { FormDialog } from './form-dialog';
 import { DeleteVehicleDialog } from './delete-dialog';
 import { filter } from './filter';
 
@@ -29,10 +32,22 @@ const columns: ColumnDef<Vehicle>[] = [
     header: 'Tipo',
   },
   {
+    accessorKey: 'plate',
+    header: 'Placa',
+  },
+  {
+    header: 'Empresa',
+    cell: ({ row }) => row.original.enterprise?.name ?? 'N/A',
+  },
+  {
     id: 'actions',
     cell: ({ row }) => (
       <div className="flex gap-2 justify-end">
-        <EditVehicleDialog vehicle={row.original} />
+        <FormDialog
+          title="Editar Veículo"
+          trigger={<EditButton />}
+          vehicle={row.original}
+        />
         <DeleteVehicleDialog vehicle={row.original} />
       </div>
     ),
@@ -42,23 +57,33 @@ const columns: ColumnDef<Vehicle>[] = [
 export const VehiclesPage = () => {
   const [search, setSearch] = useState('');
 
-  const { data, isLoading } = useQuery(['vehicles'], () =>
-    new API().getVehicles()
-  );
+  const {
+    data: vehicles,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery(['vehicles'], () => new API().getVehicles());
+
+  useQuery(['enterprises'], () => new API().getEnterprises());
 
   const getChildren = () => {
-    if (isLoading) {
-      return <div className="flex py-6">Carregando...</div>;
+    if (error) {
+      return (
+        <FetchError
+          message="Não foi possível listar veículos"
+          onClick={refetch}
+        />
+      );
     }
 
-    if (!data) {
-      return null;
+    if (isLoading) {
+      return <LoadingMessage />;
     }
 
     return (
       <DataTable
         columns={columns}
-        data={data.filter(filter(normalizeString(search)))}
+        data={(vehicles || []).filter(filter(normalizeString(search)))}
         empty="Nenhum resultado encontrado"
       />
     );
@@ -76,7 +101,10 @@ export const VehiclesPage = () => {
             placeholder="Busque por modelo ou placa..."
           />
 
-          <CreateVehicleDialog />
+          <FormDialog
+            title="Novo veículo"
+            trigger={<CreateButton title="Novo veículo" />}
+          />
         </div>
 
         {getChildren()}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { TextField } from '@/components/layout/textfield';
 import { Loading } from '@/components/layout/loading';
@@ -9,6 +9,8 @@ import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
 import { maskedNumber, Vehicle } from '@/models/vehicle.type';
 import { FormAttr } from '@/types/form';
+import { Combobox } from '@/components/ui/combobox';
+import { Label } from '@/components/ui/label';
 
 export const fromModel = (vehicle?: Vehicle) => {
   return {
@@ -19,6 +21,7 @@ export const fromModel = (vehicle?: Vehicle) => {
     type: vehicle?.type,
     year: vehicle?.year,
     status: vehicle?.status || true,
+    enterprise: vehicle?.enterprise,
   } as Vehicle;
 };
 
@@ -31,18 +34,22 @@ export const VehicleForm = ({
 
   const [state, setState] = useState(data);
 
+  const { data: enterprises } = useQuery(['enterprises'], () =>
+    new API().getEnterprises()
+  );
+
   const { mutate, isLoading } = useMutation(
     (vehicle: Vehicle) => new API().updateVehicle(vehicle),
     {
       onError: (e: any) => {
         const options = toastOptions({ onClose: onFailure });
 
-        console.log(state);
-
-        const message =
-          API.handleError(e) ?? state.id != undefined
+        const message = API.handleError(
+          e,
+          state.id != undefined
             ? 'Não foi possível editar veículo'
-            : 'Não foi possível adicionar veículo';
+            : 'Não foi possível adicionar veículo'
+        );
 
         toast.error(message, options);
       },
@@ -67,15 +74,24 @@ export const VehicleForm = ({
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState((state) => ({ ...state, [e.target.id]: e.target.value }));
+    updateData(e.target.id as keyof Vehicle, e.target.value);
   };
+
+  const updateData = (key: keyof Vehicle, value: any) => {
+    setState((state) => ({ ...state, [key]: value }));
+  };
+
+  const enterprisesOptions = (enterprises || []).map((enterprise) => ({
+    label: enterprise.name,
+    value: enterprise.id.toString(),
+  }));
 
   return (
     <form onSubmit={onSubmit}>
       <Loading className="mb-6" loading={isLoading} />
 
-      <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-6">
+      <div className="space-y-6">
+        <div className="space-y-6">
           <TextField
             onChange={onChange}
             id="model"
@@ -109,6 +125,17 @@ export const VehicleForm = ({
             maxLength={2}
             disabled={isLoading}
           />
+
+          <div className="grid gap-2">
+            <Label>Empresa</Label>
+
+            <Combobox
+              onChange={(id) => updateData('enterprise', { id: Number(id) })}
+              placeholder="Seleciona a empresa..."
+              value={state.enterprise?.id?.toString() ?? ''}
+              options={enterprisesOptions}
+            />
+          </div>
         </div>
 
         <div className="w-full flex gap-3 justify-end">

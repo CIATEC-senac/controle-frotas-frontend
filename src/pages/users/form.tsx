@@ -34,10 +34,12 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
       onError: (e: any) => {
         const options = toastOptions({ onClose: onFailure });
 
-        const message =
-          API.handleError(e) ?? state.id != undefined
+        const message = API.handleError(
+          e,
+          state.id != undefined
             ? 'Não foi possível editar usuário'
-            : 'Não foi possível adicionar usuário';
+            : 'Não foi possível adicionar usuário'
+        );
 
         toast.error(message, options);
       },
@@ -69,14 +71,15 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
     <form onSubmit={onSubmit}>
       <Loading className="mb-6" loading={isLoading} />
 
-      <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-6">
+      <div className="space-y-6">
+        <div className="space-y-6">
           <TextField
             onChange={onChange}
             id="registry"
             label="Matrícula"
             value={state.registration}
             disabled={isLoading}
+            required
           />
 
           <TextField
@@ -85,6 +88,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             label="Nome"
             value={state.name}
             disabled={isLoading}
+            required
           />
 
           <TextField
@@ -94,6 +98,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             value={maskedCPF(state.cpf)}
             maxLength={14}
             disabled={isLoading}
+            required
           />
 
           <TextField
@@ -102,6 +107,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             label="E-mail"
             value={state.email}
             disabled={isLoading}
+            required
           />
 
           <TextField
@@ -111,6 +117,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             value={state.cnh}
             maxLength={11}
             disabled={isLoading}
+            required
           />
 
           <TextField
@@ -120,6 +127,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             value={maskedAdmittedAt(state.admittedAt)}
             maxLength={10}
             disabled={isLoading}
+            required
           />
         </div>
 

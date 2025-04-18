@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { API } from '@/lib/api';
 
 import { LoginForm } from './login.types';
+import { Loading } from '@/components/layout/loading';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -38,11 +39,7 @@ export const LoginPage = () => {
       onSuccess: (token) => {
         // Salvar token
         localStorage.setItem('token', token);
-
-        toast.success('Logado com sucesso', {
-          delay: 1000,
-          onClose: () => navigate('/'),
-        });
+        navigate('/');
       },
     }
   );
@@ -74,7 +71,9 @@ export const LoginPage = () => {
   return (
     <main className="flex flex-col justify-center items-center gap-6 p-6 h-full">
       <form onSubmit={onSubmit}>
-        <Card className="bg-primary">
+        <Card className="pt-0 bg-primary overflow-hidden">
+          <Loading className="mb-6" loading={isLoading} />
+
           <CardContent className="flex flex-col gap-4">
             <img
               style={{ margin: '20px auto' }}

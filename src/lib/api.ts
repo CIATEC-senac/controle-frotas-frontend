@@ -1,10 +1,11 @@
+import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
 import { Http } from './http';
 import { Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
-import { AxiosError } from 'axios';
+import { Enterprise } from '@/models/enterprise';
 
 export class API {
   public readonly http: Http;
@@ -14,7 +15,7 @@ export class API {
     this.http = new Http(`http://${location.hostname}:3000`);
   }
 
-  static handleError(e: Error) {
+  static handleError(e: Error, defaultMessage?: string) {
     if (e instanceof AxiosError) {
       const apiMessage = e.response?.data?.message;
 
@@ -25,7 +26,7 @@ export class API {
       return e.message;
     }
 
-    return null;
+    return defaultMessage;
   }
 
   public async login(cpf: string, password: string): Promise<string> {
@@ -39,6 +40,10 @@ export class API {
 
   public async getUsers() {
     return this.http.request<User[]>('/user').then(({ data }) => data);
+  }
+
+  public async getTokenUser() {
+    return this.http.request<User>('/token').then(({ data }) => data);
   }
 
   public async getUser() {
@@ -91,6 +96,12 @@ export class API {
     // GET http://backend/route?from=&to=
     return this.http
       .request<Route[]>('/route', { params: { from, to } })
+      .then(({ data }) => data);
+  }
+
+  public async getEnterprises() {
+    return this.http
+      .request<Enterprise[]>('/enterprise')
       .then(({ data }) => data);
   }
 }
