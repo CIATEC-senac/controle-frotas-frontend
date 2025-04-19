@@ -1,6 +1,6 @@
 import { Bus } from 'lucide-react';
 
-import { History } from '@/models/history';
+import { History } from '@/models/history.type';
 import { getType } from '@/models/vehicle.type';
 import { Detail, SectionCard } from './history-cards';
 

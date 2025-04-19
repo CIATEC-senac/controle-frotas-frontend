@@ -1,12 +1,13 @@
 import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
-import { Enterprise } from '@/models/enterprise';
+import { Enterprise } from '@/models/enterprise.type';
 import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
 
-import { History } from '@/models/history';
+import { History } from '@/models/history.type';
+import { Maintenance } from '@/models/maintenance.type';
 import { Http } from './http';
 
 export class API {
@@ -129,6 +130,27 @@ export class API {
   public async deleteRoute(route: Route) {
     return await this.http
       .request<Route>(`/route/${route.id}`, { method: 'DELETE' })
+      .then(({ data }) => data);
+  }
+
+  public async getMaintenances() {
+    return this.http
+      .request<Maintenance[]>('/maintenance')
+      .then(({ data }) => data);
+  }
+
+  public async updateMaintenance(maintenance: Maintenance) {
+    return await this.http
+      .request<Maintenance>('/maintenance', {
+        method: maintenance.id ? 'PATCH' : 'POST',
+        data: maintenance,
+      })
+      .then(({ data }) => data);
+  }
+
+  public async deleteMaintenance(maintenance: Maintenance) {
+    return await this.http
+      .request<Route>(`/maintenance/${maintenance.id}`, { method: 'DELETE' })
       .then(({ data }) => data);
   }
 

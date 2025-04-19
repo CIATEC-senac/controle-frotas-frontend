@@ -1,20 +1,18 @@
 import { ColumnDef } from '@tanstack/react-table';
-import dayjs from 'dayjs';
 import { Link } from 'react-router';
 
 import { Button } from '@/components/ui/button';
-import { History } from '@/models/history';
+import { fromDate } from '@/lib/date-parser';
+import { History } from '@/models/history.type';
 
 export const columns: ColumnDef<History>[] = [
   {
     header: 'Partida',
-    cell: ({ row }) =>
-      dayjs(row.original.startedAt).format('DD/MM/YYYY HH:mm:ss'),
+    cell: ({ row }) => fromDate(row.original.startedAt),
   },
   {
     header: 'Chegada',
-    cell: ({ row }) =>
-      dayjs(row.original.endedAt).format('DD/MM/YYYY HH:mm:ss'),
+    cell: ({ row }) => fromDate(row.original.endedAt),
   },
   {
     header: 'Motorista',

@@ -2,7 +2,8 @@ import dayjs from 'dayjs';
 import { Map } from 'lucide-react';
 import { Direction, Marker, StaticGoogleMap } from 'react-static-google-map';
 
-import { History } from '@/models/history';
+import { fromDate } from '@/lib/date-parser';
+import { History } from '@/models/history.type';
 import { LatLng } from '@/models/route.type';
 import { Detail, SectionCard } from './history-cards';
 
@@ -69,15 +70,9 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
             value={history.path.destination.toUpperCase()}
           />
 
-          <Detail
-            label="Partida"
-            value={dayjs(history.startedAt).format('DD/MM/YYYY HH:mm:ss')}
-          />
+          <Detail label="Partida" value={fromDate(history.startedAt)} />
 
-          <Detail
-            label="Chegada"
-            value={dayjs(history.endedAt).format('DD/MM/YYYY HH:mm:ss')}
-          />
+          <Detail label="Chegada" value={fromDate(history.endedAt)} />
 
           <Detail
             label="Duração prevista"

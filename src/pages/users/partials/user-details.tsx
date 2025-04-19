@@ -4,7 +4,7 @@ import { EditButton } from '@/components/layout/edit-button';
 import { Status } from '@/components/layout/status';
 import { maskedCPF, roleOptions, User } from '@/models/user.type';
 
-import dayjs from 'dayjs';
+import { fromDate } from '@/lib/date-parser';
 import { DeleteUserDialog } from '../delete-dialog';
 import { FormDialog } from '../form-dialog';
 
@@ -42,7 +42,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     header: 'Data de Admissão',
-    accessorFn: (row) => dayjs(row.admittedAt).format('DD/MM/YYYY'),
+    accessorFn: (row) => fromDate(row.admittedAt, 'DD/MM/YYYY'),
   },
   {
     header: 'Status',
