@@ -3,6 +3,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { EditButton } from '@/components/layout/edit-button';
 import { Vehicle } from '@/models/vehicle.type';
 
+import { fromDate } from '@/lib/date-parser';
+import dayjs from 'dayjs';
 import { DeleteVehicleDialog } from '../delete-dialog';
 import { FormDialog } from '../form-dialog';
 
@@ -43,6 +45,22 @@ export const columns: ColumnDef<Vehicle>[] = [
   {
     header: 'Empresa',
     cell: ({ row }) => row.original.enterprise?.name ?? 'N/A',
+  },
+  {
+    header: 'Próxima Manutenção',
+    cell: ({ row }) => {
+      const today = dayjs().startOf('day');
+
+      const nextMaintenance = row.original.maintenances
+        .sort((a, b) => (a.date > b.date ? -1 : 1))
+        .find(({ date }) => today.isBefore(date));
+
+      if (nextMaintenance) {
+        return fromDate(nextMaintenance.date, 'DD/MM/YYYY HH:mm');
+      }
+
+      return 'N/A';
+    },
   },
   {
     id: 'actions',

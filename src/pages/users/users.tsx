@@ -28,7 +28,7 @@ export const UsersPage = () => {
       return (
         <FetchError
           message="Não foi possível listar usuários"
-          onClick={() => refetch()}
+          onClick={refetch}
         />
       );
     }

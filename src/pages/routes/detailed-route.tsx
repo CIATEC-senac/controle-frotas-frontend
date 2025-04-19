@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { Clock, MapPin, Ruler, Waypoints } from 'lucide-react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import { Link, useParams } from 'react-router';
 dayjs.extend(duration);
@@ -10,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { API } from '@/lib/api';
 import { getName } from '@/models/route.type';
-import React from 'react';
+
 import { Map } from './partials/map';
 import { Detail } from './partials/route-details';
 
@@ -30,10 +31,7 @@ export const DetailedRoutePage = () => {
       <div className="w-full h-full relative">
         {route && (
           <React.Fragment>
-            <div
-              className="absolute"
-              style={{ zIndex: 1, top: 10.0, left: 10.0 }}
-            >
+            <div className="absolute top-[10px] left-[10px] z-10">
               <Card className="rounded">
                 <CardContent className="flex flex-col gap-3">
                   <h3>{getName(route)}</h3>
@@ -41,13 +39,13 @@ export const DetailedRoutePage = () => {
                   <Detail
                     icon={<MapPin size={14} />}
                     label="Origem"
-                    value={route.path.origin}
+                    value={route.path.origin.toUpperCase()}
                   />
 
                   <Detail
                     icon={<MapPin size={14} />}
                     label="Destino"
-                    value={route.path.destination}
+                    value={route.path.destination.toUpperCase()}
                   />
 
                   <div className="grid grid-cols-3 gap-6">

@@ -1,7 +1,6 @@
 import { format } from '@react-input/mask';
-import dayjs from 'dayjs';
 
-import { Enterprise } from './enterprise';
+import { Enterprise } from './enterprise.type';
 
 export type User = {
   id: number;
@@ -23,7 +22,7 @@ export const maskedCPF = (cpf: string | undefined) =>
   });
 
 export const maskedAdmittedAt = (admittedAt: string | undefined) =>
-  format(admittedAt ? dayjs(admittedAt).format('DDMMYYYY') : '', {
+  format(admittedAt ? admittedAt.replace(/[\/\:]/g, '') : '', {
     mask: '__/__/____',
     replacement: { _: /\d/ },
   });

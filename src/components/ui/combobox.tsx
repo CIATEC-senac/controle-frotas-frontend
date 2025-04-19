@@ -24,7 +24,8 @@ export type ComboboxProps = {
   options: ComboboxOption;
   placeholder: string;
   onChange: (value: string) => void;
-  value: string;
+  value: string | string[];
+  multiple?: boolean;
 };
 
 export function Combobox({
@@ -32,16 +33,17 @@ export function Combobox({
   placeholder,
   onChange,
   value,
+  multiple,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
   const onSelect = (value: string): void => {
     onChange(value);
-    setOpen(false);
+    !multiple && setOpen(false);
   };
 
   const valueCn =
-    'max-w-[175px] pointer-events-none overflow-hidden overflow-ellipsis flex-[1]';
+    'max-w-[300px] pointer-events-none overflow-hidden overflow-ellipsis flex-[1]';
 
   return (
     <Popover modal={true} open={open} onOpenChange={setOpen}>
@@ -55,7 +57,15 @@ export function Combobox({
           >
             {value ? (
               <span className={valueCn}>
-                {options.find((option) => option.value === value)?.label}
+                {options
+                  .filter(
+                    (option) =>
+                      (Array.isArray(value) &&
+                        value.indexOf(option.value) != -1) ||
+                      option.value === value
+                  )
+                  .map((option) => option.label)
+                  .join(', ')}
               </span>
             ) : (
               <span className={valueCn} style={{ color: '#a9a9ac' }}>
@@ -85,7 +95,11 @@ export function Combobox({
                   <Check
                     className={cn(
                       'ml-auto',
-                      value === option.value ? 'opacity-100' : 'opacity-0'
+                      (Array.isArray(value) &&
+                        value.indexOf(option.value) != -1) ||
+                        value === option.value
+                        ? 'opacity-100'
+                        : 'opacity-0'
                     )}
                   />
                 </CommandItem>

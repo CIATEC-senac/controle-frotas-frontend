@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 dayjs.extend(duration);
 
 import { Card, CardContent } from '@/components/ui/card';
-import { History } from '@/models/history';
+import { History } from '@/models/history.type';
 
 import { DriverCard } from './driver-card';
 import { ScheduledRouteCard } from './scheduled-route-card';

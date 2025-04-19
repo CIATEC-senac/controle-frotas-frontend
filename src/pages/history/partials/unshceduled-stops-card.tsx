@@ -1,6 +1,6 @@
 import { TriangleAlert } from 'lucide-react';
 
-import { History } from '@/models/history';
+import { History } from '@/models/history.type';
 import { SectionCard } from './history-cards';
 
 export const UnshceduledStopsCard = ({ history }: { history: History }) => {

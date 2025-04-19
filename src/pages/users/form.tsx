@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Label } from '@/components/ui/label';
 import { API } from '@/lib/api';
+import { fromISO, toISO } from '@/lib/date-parser';
 import { toastOptions } from '@/lib/toast.options';
 import {
   maskedAdmittedAt,
@@ -25,7 +26,7 @@ export const fromModel = (user?: User) => {
     email: user?.email,
     cpf: user?.cpf,
     cnh: user?.cnh,
-    admittedAt: user?.admittedAt,
+    admittedAt: user?.admittedAt ? fromISO(user?.admittedAt, 'DD/MM/YYYY') : '',
     status: user?.status ?? true,
     role: user?.role ?? 2,
   } as User;
@@ -68,7 +69,11 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate({ ...state, cpf: state.cpf?.replace(/[.-]/g, '') });
+    mutate({
+      ...state,
+      cpf: state.cpf?.replace(/[.-]/g, ''),
+      admittedAt: toISO(state.admittedAt, 'DD/MM/YYYY'),
+    });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>

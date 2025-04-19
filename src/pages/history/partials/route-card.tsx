@@ -3,7 +3,8 @@ import duration from 'dayjs/plugin/duration';
 import { Pin } from 'lucide-react';
 dayjs.extend(duration);
 
-import { History } from '@/models/history';
+import { fromDate } from '@/lib/date-parser';
+import { History } from '@/models/history.type';
 import { Detail, SectionCard } from './history-cards';
 
 export const RouteCard = ({ history }: { history: History }) => {
@@ -29,15 +30,9 @@ export const RouteCard = ({ history }: { history: History }) => {
 
       <Detail label="Destino" value={history.path.destination.toUpperCase()} />
 
-      <Detail
-        label="Partida"
-        value={dayjs(history.startedAt).format('DD/MM/YYYY HH:mm:ss')}
-      />
+      <Detail label="Partida" value={fromDate(history.startedAt)} />
 
-      <Detail
-        label="Chegada"
-        value={dayjs(history.endedAt).format('DD/MM/YYYY HH:mm:ss')}
-      />
+      <Detail label="Chegada" value={fromDate(history.endedAt)} />
 
       <Detail label="Duração prevista" value={estimatedDuration + ' minutos'} />
 

@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
 import { RotateCcw } from 'lucide-react';
 import React from 'react';
 
-import { getStatus, HistoryApproval } from '@/models/history';
+import { fromDate } from '@/lib/date-parser';
+import { getStatus, HistoryApproval } from '@/models/history.type';
 import { Detail, SectionCard } from './history-cards';
 
 export const StatusCard = ({ approval }: { approval?: HistoryApproval }) => {
@@ -14,10 +14,7 @@ export const StatusCard = ({ approval }: { approval?: HistoryApproval }) => {
         <React.Fragment>
           <Detail label="Aprovada por" value={approval.approvedBy.name} />
 
-          <Detail
-            label="Aprovada em"
-            value={dayjs(approval.date).format('DD/MM/YYYY HH:mm:ss')}
-          />
+          <Detail label="Aprovada em" value={fromDate(approval.date)} />
         </React.Fragment>
       )}
     </SectionCard>

@@ -1,6 +1,7 @@
 import { format } from '@react-input/mask';
 
-import { Enterprise } from './enterprise';
+import { Enterprise } from './enterprise.type';
+import { Maintenance } from './maintenance.type';
 
 type VehicleType = 'bus' | 'car' | 'minibus' | 'van';
 
@@ -12,6 +13,7 @@ export type Vehicle = {
   year: number;
   type: VehicleType;
   status: boolean;
+  maintenances: Maintenance[];
   enterprise?: Partial<Enterprise>;
 };
 
