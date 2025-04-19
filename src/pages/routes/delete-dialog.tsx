@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios';
-import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
+import { DeleteButton } from '@/components/layout/delete-button';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -49,12 +49,7 @@ export const DeleteRouteDialog = ({ route }: DeleteRouteDialogAttr) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          disabled={!route.status}
-          variant="destructive"
-          size="icon"
-          children={<Trash2 />}
-        />
+        <DeleteButton disabled={!route.status} />
       </DialogTrigger>
 
       <DialogContent>

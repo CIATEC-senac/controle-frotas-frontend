@@ -12,6 +12,7 @@ import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
 import { Route } from '@/models/route.type';
 import { FormAttr } from '@/types/form';
+
 import { RouteStop } from './stop';
 
 export const fromModel = (route?: Route) => {

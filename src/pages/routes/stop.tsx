@@ -1,4 +1,4 @@
-import { Trash } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 import { TextField, TextFieldAtrr } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ export const RouteStop = ({
         variant="ghost"
         onClick={onDelete}
       >
-        <Trash />
+        <Trash2 />
       </Button>
     </div>
   );

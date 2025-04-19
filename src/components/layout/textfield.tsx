@@ -16,12 +16,9 @@ export type TextFieldAtrr = React.ComponentProps<'input'> & {
   >;
 };
 
-export const TextField = ({
-  label,
-  labelProps,
-  containerProps,
-  ...props
-}: TextFieldAtrr) => {
+export const TextField = (props: TextFieldAtrr) => {
+  let { label, labelProps, containerProps, ...rest } = props;
+
   if (!containerProps) containerProps = {};
   if (!containerProps.className) containerProps.className = '';
 
@@ -30,7 +27,7 @@ export const TextField = ({
   return (
     <div {...containerProps}>
       {label != null ? <Label {...labelProps}>{label}</Label> : null}
-      <Input {...props} />
+      <Input {...rest} />
     </div>
   );
 };
