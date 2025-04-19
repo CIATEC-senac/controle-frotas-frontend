@@ -1,12 +1,14 @@
+import { ColumnDef } from '@tanstack/react-table';
 import { Clock, ExternalLink, MapPin } from 'lucide-react';
+import { ReactNode } from 'react';
+import { Link } from 'react-router';
 
 import { EditButton } from '@/components/layout/edit-button';
 import { Button } from '@/components/ui/button';
 import { getEstimatedArrivalDate, getName, Route } from '@/models/route.type';
-import { ColumnDef } from '@tanstack/react-table';
-import { Link } from 'react-router';
 import { DeleteRouteDialog } from '../delete-dialog';
 import { FormDialog } from '../form-dialog';
+import { RouteQrCode } from './route-qrcode';
 
 export const RoutePathTracking = ({ route }: { route: Route }) => {
   return (
@@ -75,6 +77,27 @@ export const RouteStatus = ({ status }: { status: boolean }) => {
   );
 };
 
+type DetailAttr = {
+  icon?: ReactNode;
+  label: string;
+  value: string;
+  suffix?: string;
+};
+
+export const Detail = ({ icon, label, value, suffix }: DetailAttr) => {
+  return (
+    <div className="grid text-sm">
+      <p className="flex gap-2 items-center text-gray-600">
+        {icon && icon} {label}:
+      </p>
+
+      <p>
+        {value} {suffix && suffix}
+      </p>
+    </div>
+  );
+};
+
 export const columns: ColumnDef<Route>[] = [
   {
     header: 'Nome',
@@ -84,6 +107,11 @@ export const columns: ColumnDef<Route>[] = [
     header: 'Origem / Destino',
     cell: ({ row }) => <RoutePathTracking route={row.original} />,
   },
+  {
+    header: 'QR Code',
+    cell: ({ row }) => <RouteQrCode route={row.original} />,
+  },
+  /*
   {
     header: 'Paradas',
     cell: ({ row }) => `${row.original.path.stops.length} parada(s)`,
@@ -97,6 +125,7 @@ export const columns: ColumnDef<Route>[] = [
     cell: ({ row }) =>
       `${(row.original.estimatedDistance / 1000.0).toFixed(2)} Km`,
   },
+  */
   {
     header: 'Status',
     cell: ({ row }) => <RouteStatus status={row.original.status} />,

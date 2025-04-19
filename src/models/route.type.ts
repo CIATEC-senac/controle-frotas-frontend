@@ -8,6 +8,17 @@ export type RoutePath = {
   stops: string[];
 };
 
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
+
+export type RoutePathCoordinates = {
+  origin: LatLng;
+  destination: LatLng;
+  stops: LatLng[];
+};
+
 export type Route = {
   id?: number;
   estimatedDuration: number;
@@ -17,6 +28,10 @@ export type Route = {
   driver: User;
   startAt: string;
   status: boolean;
+};
+
+export type DetailedRoute = Route & {
+  pathCoordinates: RoutePathCoordinates;
 };
 
 export const getNeighborhood = (path: string) => {

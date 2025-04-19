@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
 import { Enterprise } from '@/models/enterprise';
-import { Route } from '@/models/route.type';
+import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
 
@@ -97,6 +97,12 @@ export class API {
     // GET http://backend/route?from=&to=
     return this.http
       .request<Route[]>('/route', { params: { from, to } })
+      .then(({ data }) => data);
+  }
+
+  public async getRoute(id: number) {
+    return this.http
+      .request<DetailedRoute>(`/route/${id}`)
       .then(({ data }) => data);
   }
 
