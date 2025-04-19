@@ -112,6 +112,14 @@ export const columns: ColumnDef<Route>[] = [
   },
   */
   {
+    header: 'Histórico',
+    cell: ({ row }) => (
+      <Button variant="link" asChild>
+        <Link to={`/route/${row.original.id}/history`}>Histórico</Link>
+      </Button>
+    ),
+  },
+  {
     header: 'Status',
     cell: ({ row }) => <Status status={row.original.status} />,
   },

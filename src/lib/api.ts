@@ -6,6 +6,7 @@ import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
 
+import { History } from '@/models/history';
 import { Http } from './http';
 
 export class API {
@@ -83,9 +84,7 @@ export class API {
 
   public async deleteVehicle(vehicle: Vehicle) {
     return await this.http
-      .request<Vehicle>(`/user/${vehicle.id}`, {
-        method: 'DELETE',
-      })
+      .request<Vehicle>(`/user/${vehicle.id}`, { method: 'DELETE' })
       .then(({ data }) => data);
   }
 
@@ -106,6 +105,18 @@ export class API {
       .then(({ data }) => data);
   }
 
+  public async getRouteHistory(id: number) {
+    return this.http
+      .request<History[]>(`/route/${id}/history`)
+      .then(({ data }) => data);
+  }
+
+  public async getHistory(id: number) {
+    return this.http
+      .request<History>(`/history/${id}`)
+      .then(({ data }) => data);
+  }
+
   public async updateRoute(route: Route) {
     return await this.http
       .request<Route>('/route', {
@@ -117,9 +128,7 @@ export class API {
 
   public async deleteRoute(route: Route) {
     return await this.http
-      .request<Route>(`/route/${route.id}`, {
-        method: 'DELETE',
-      })
+      .request<Route>(`/route/${route.id}`, { method: 'DELETE' })
       .then(({ data }) => data);
   }
 

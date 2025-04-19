@@ -49,8 +49,20 @@ export const getEstimatedArrivalDate = (route: Route) => {
 };
 
 export const getName = (route: Route) => {
-  const originNeighborhood = getNeighborhood(route.path.origin);
-  const destinationNeighborhood = getNeighborhood(route.path.destination);
+  // const originNeighborhood = getNeighborhood(route.path.origin);
+  // const destinationNeighborhood = getNeighborhood(route.path.destination);
 
-  return `${originNeighborhood} - ${destinationNeighborhood}`;
+  // return `${originNeighborhood} - ${destinationNeighborhood}`;
+
+  return 'Rota ' + leftPad(route.id!.toString(), 4, '0');
+};
+
+export const leftPad = (str: string, length: number, complete: string) => {
+  let padded = str;
+
+  while (padded.length < length) {
+    padded = complete + padded;
+  }
+
+  return padded;
 };
