@@ -1,62 +1,19 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { CreateButton } from '@/components/layout/create-button';
 import { DataTable } from '@/components/layout/data-table';
-import { EditButton } from '@/components/layout/edit-button';
 import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
-import { Vehicle } from '@/models/vehicle.type';
 
-import { DeleteVehicleDialog } from './delete-dialog';
 import { filter } from './filter';
 import { FormDialog } from './form-dialog';
-
-const columns: ColumnDef<Vehicle>[] = [
-  {
-    accessorKey: 'plate',
-    header: 'Placa',
-  },
-  {
-    accessorKey: 'model',
-    header: 'Modelo',
-  },
-  {
-    accessorKey: 'year',
-    header: 'Ano',
-  },
-  {
-    accessorKey: 'type',
-    header: 'Tipo',
-  },
-  {
-    header: 'Capacidade',
-    cell: ({ row }) => `${row.original.capacity} lugares`,
-  },
-  {
-    header: 'Empresa',
-    cell: ({ row }) => row.original.enterprise?.name ?? 'N/A',
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex gap-2 justify-end">
-        <FormDialog
-          title="Editar Veículo"
-          trigger={<EditButton />}
-          vehicle={row.original}
-        />
-        <DeleteVehicleDialog vehicle={row.original} />
-      </div>
-    ),
-  },
-];
+import { columns } from './partials/vehicle-details';
 
 export const VehiclesPage = () => {
   const [search, setSearch] = useState('');

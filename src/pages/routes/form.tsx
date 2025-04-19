@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
@@ -13,18 +12,17 @@ import { toastOptions } from '@/lib/toast.options';
 import { Route } from '@/models/route.type';
 import { FormAttr } from '@/types/form';
 
+import { FormLoading } from '@/components/layout/form-loading';
 import { RouteStop } from './stop';
 
 export const fromModel = (route?: Route) => {
+  const emptyPath = { origin: '', destination: '', stops: [''] };
+
   return {
     id: route?.id,
     driver: route?.driver,
     vehicle: route?.vehicle,
-    path: route?.path || {
-      origin: '',
-      destination: '',
-      stops: [''],
-    },
+    path: route?.path || emptyPath,
     startAt: route?.startAt,
   } as Route;
 };
@@ -107,6 +105,13 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
       return { ...state, path: { ...state.path, stops } };
     });
 
+  const updatePath =
+    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
+      setState((state) => ({
+        ...state,
+        path: { ...state.path, [key]: e.target.value },
+      }));
+
   const driversOptions = (drivers || []).map((i) => ({
     label: i.name,
     value: i.id.toString(),
@@ -117,16 +122,9 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
     value: i.id.toString(),
   }));
 
-  const updatePath =
-    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-      setState((state) => ({
-        ...state,
-        path: { ...state.path, [key]: e.target.value },
-      }));
-
   return (
     <form onSubmit={onSubmit}>
-      <Loading className="mb-6" loading={isLoading} />
+      <FormLoading loading={isLoading} />
 
       <div className="space-y-6">
         <div className="space-y-6">

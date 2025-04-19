@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { EditButton } from '@/components/layout/edit-button';
+import { Status } from '@/components/layout/status';
 import { Button } from '@/components/ui/button';
 import { getEstimatedArrivalDate, getName, Route } from '@/models/route.type';
 import { DeleteRouteDialog } from '../delete-dialog';
@@ -61,22 +62,6 @@ export const RouteLink = ({ route }: { route: Route }) => {
   );
 };
 
-export const RouteStatus = ({ status }: { status: boolean }) => {
-  if (status) {
-    return (
-      <span className="text-green-600 bg-green-100 rounded-2xl py-1 px-3">
-        Ativo
-      </span>
-    );
-  }
-
-  return (
-    <span className="text-gray-600 bg-gray-100 rounded-2xl py-1 px-3">
-      Inativo
-    </span>
-  );
-};
-
 type DetailAttr = {
   icon?: ReactNode;
   label: string;
@@ -128,7 +113,7 @@ export const columns: ColumnDef<Route>[] = [
   */
   {
     header: 'Status',
-    cell: ({ row }) => <RouteStatus status={row.original.status} />,
+    cell: ({ row }) => <Status status={row.original.status} />,
   },
   {
     id: 'actions',

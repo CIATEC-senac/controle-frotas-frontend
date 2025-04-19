@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { Loading } from '@/components/layout/loading';
+import { FormLoading } from '@/components/layout/form-loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
@@ -21,7 +21,7 @@ export const fromModel = (vehicle?: Vehicle) => {
     plate: vehicle?.plate,
     type: vehicle?.type,
     year: vehicle?.year,
-    status: vehicle?.status || true,
+    status: vehicle?.status ?? true,
     enterprise: vehicle?.enterprise,
   } as Vehicle;
 };
@@ -89,7 +89,7 @@ export const VehicleForm = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <Loading className="mb-6" loading={isLoading} />
+      <FormLoading loading={isLoading} />
 
       <div className="space-y-6">
         <div className="space-y-6">
