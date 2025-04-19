@@ -9,13 +9,13 @@ import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
-import { normalizeString } from '@/lib/normalize';
 
+import { normalizeString } from '@/lib/normalize';
 import { filter } from './filter';
 import { FormDialog } from './form-dialog';
-import { columns } from './partials/vehicle-details';
+import { columns } from './partials/route-details';
 
-export const VehiclesPage = () => {
+export const RoutesPage = () => {
   const [search, setSearch] = useState('');
 
   const {
@@ -23,17 +23,12 @@ export const VehiclesPage = () => {
     isLoading,
     error,
     refetch,
-  } = useQuery(['vehicles'], () => new API().getVehicles());
-
-  useQuery(['enterprises'], () => new API().getEnterprises());
+  } = useQuery(['routes'], () => new API().getRoutes());
 
   const getChildren = () => {
     if (error) {
       return (
-        <FetchError
-          message="Não foi possível listar veículos"
-          onClick={refetch}
-        />
+        <FetchError message="Não foi possível listar rotas" onClick={refetch} />
       );
     }
 
@@ -51,7 +46,7 @@ export const VehiclesPage = () => {
   };
 
   return (
-    <Layout title="Veículos">
+    <Layout title="Rotas">
       <div className="flex flex-col gap-y-3">
         <div className="flex flex-wrap gap-3 place-content-between">
           <TextField
@@ -59,12 +54,12 @@ export const VehiclesPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             prefixIcon={<Search size={16} />}
-            placeholder="Busque por modelo ou placa..."
+            placeholder="Busque por origem, destino ou paradas..."
           />
 
           <FormDialog
-            title="Novo veículo"
-            trigger={<CreateButton title="Novo veículo" />}
+            title="Nova rota"
+            trigger={<CreateButton title="Nova rota" />}
           />
         </div>
 

@@ -2,12 +2,19 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { Loading } from '@/components/layout/loading';
+import { FormLoading } from '@/components/layout/form-loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
+import { Combobox } from '@/components/ui/combobox';
+import { Label } from '@/components/ui/label';
 import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
-import { maskedAdmittedAt, maskedCPF, User } from '@/models/user.type';
+import {
+  maskedAdmittedAt,
+  maskedCPF,
+  roleOptions,
+  User,
+} from '@/models/user.type';
 import { FormAttr } from '@/types/form';
 
 export const fromModel = (user?: User) => {
@@ -19,7 +26,8 @@ export const fromModel = (user?: User) => {
     cpf: user?.cpf,
     cnh: user?.cnh,
     admittedAt: user?.admittedAt,
-    status: user?.status || true,
+    status: user?.status ?? true,
+    role: user?.role ?? 2,
   } as User;
 };
 
@@ -63,19 +71,22 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
     mutate({ ...state, cpf: state.cpf?.replace(/[.-]/g, '') });
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState((state) => ({ ...state, [e.target.id]: e.target.value }));
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    updateData(e.target.id as keyof User, e.target.value);
+
+  const updateData = (key: keyof User, value: any) => {
+    setState((state) => ({ ...state, [key]: value }));
   };
 
   return (
     <form onSubmit={onSubmit}>
-      <Loading className="mb-6" loading={isLoading} />
+      <FormLoading loading={isLoading} />
 
       <div className="space-y-6">
         <div className="space-y-6">
           <TextField
             onChange={onChange}
-            id="registry"
+            id="registration"
             label="Matrícula"
             value={state.registration}
             disabled={isLoading}
@@ -129,6 +140,17 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
             disabled={isLoading}
             required
           />
+
+          <div className="grid gap-2">
+            <Label>Cargo</Label>
+
+            <Combobox
+              onChange={(id) => updateData('role', Number(id))}
+              placeholder="Seleciona o cargo..."
+              value={state.role.toString() ?? ''}
+              options={roleOptions}
+            />
+          </div>
         </div>
 
         <div className="w-full flex gap-3 justify-end">

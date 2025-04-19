@@ -2,10 +2,11 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
 import { Enterprise } from '@/models/enterprise';
-import { Route } from '@/models/route.type';
+import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
 
+import { History } from '@/models/history';
 import { Http } from './http';
 
 export class API {
@@ -83,9 +84,7 @@ export class API {
 
   public async deleteVehicle(vehicle: Vehicle) {
     return await this.http
-      .request<Vehicle>(`/user/${vehicle.id}`, {
-        method: 'DELETE',
-      })
+      .request<Vehicle>(`/user/${vehicle.id}`, { method: 'DELETE' })
       .then(({ data }) => data);
   }
 
@@ -97,6 +96,39 @@ export class API {
     // GET http://backend/route?from=&to=
     return this.http
       .request<Route[]>('/route', { params: { from, to } })
+      .then(({ data }) => data);
+  }
+
+  public async getRoute(id: number) {
+    return this.http
+      .request<DetailedRoute>(`/route/${id}`)
+      .then(({ data }) => data);
+  }
+
+  public async getRouteHistory(id: number) {
+    return this.http
+      .request<History[]>(`/route/${id}/history`)
+      .then(({ data }) => data);
+  }
+
+  public async getHistory(id: number) {
+    return this.http
+      .request<History>(`/history/${id}`)
+      .then(({ data }) => data);
+  }
+
+  public async updateRoute(route: Route) {
+    return await this.http
+      .request<Route>('/route', {
+        method: route.id ? 'PATCH' : 'POST',
+        data: route,
+      })
+      .then(({ data }) => data);
+  }
+
+  public async deleteRoute(route: Route) {
+    return await this.http
+      .request<Route>(`/route/${route.id}`, { method: 'DELETE' })
       .then(({ data }) => data);
   }
 

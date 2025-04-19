@@ -9,7 +9,7 @@ export type User = {
   name: string;
   cpf: string;
   email: string;
-  role: string;
+  role: number;
   cnh?: string;
   status: boolean;
   admittedAt: string;
@@ -27,3 +27,18 @@ export const maskedAdmittedAt = (admittedAt: string | undefined) =>
     mask: '__/__/____',
     replacement: { _: /\d/ },
   });
+
+export const roleOptions = [
+  {
+    label: 'Admin',
+    value: '0',
+  },
+  {
+    label: 'Gerente',
+    value: '1',
+  },
+  {
+    label: 'Motorista',
+    value: '2',
+  },
+];

@@ -1,54 +1,19 @@
-import { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { CreateButton } from '@/components/layout/create-button';
 import { DataTable } from '@/components/layout/data-table';
-import { EditButton } from '@/components/layout/edit-button';
 import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { TextField } from '@/components/layout/textfield';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
-import { maskedCPF, User } from '@/models/user.type';
 
-import { DeleteUserDialog } from './delete-dialog';
 import { filter } from './filter';
 import { FormDialog } from './form-dialog';
-
-const columns: ColumnDef<User>[] = [
-  {
-    accessorKey: 'registration',
-    header: 'Matrícula',
-  },
-  {
-    accessorKey: 'name',
-    header: 'Nome',
-  },
-  {
-    header: 'CPF',
-    cell: ({ row }) => maskedCPF(row.original.cpf),
-  },
-  {
-    accessorKey: 'email',
-    header: 'E-mail',
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex gap-2 justify-end">
-        <FormDialog
-          trigger={<EditButton />}
-          title="Editar Usuário"
-          user={row.original}
-        />
-        <DeleteUserDialog user={row.original} />
-      </div>
-    ),
-  },
-];
+import { columns } from './partials/user-details';
 
 export const UsersPage = () => {
   const [search, setSearch] = useState('');

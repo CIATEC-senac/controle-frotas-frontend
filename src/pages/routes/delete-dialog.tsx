@@ -16,27 +16,31 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { API } from '@/lib/api';
-import { User } from '@/models/user.type';
+import { getName, Route } from '@/models/route.type';
 
-export const DeleteUserDialog = ({ user }: { user: User }) => {
+type DeleteRouteDialogAttr = {
+  route: Route;
+};
+
+export const DeleteRouteDialog = ({ route }: DeleteRouteDialogAttr) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(
-    (user: User) => new API().deleteUser(user),
+    (route: Route) => new API().deleteRoute(route),
     {
       onError: (e: any) => {
         if (e instanceof AxiosError) {
           toast.error(e.response?.data?.message ?? e.message);
         } else {
-          toast.error('Não foi possível excluir usuário');
+          toast.error('Não foi possível excluir rota');
         }
 
         setOpen(false);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(['users']);
+        queryClient.invalidateQueries(['routes']);
         setOpen(false);
       },
     }
@@ -45,17 +49,17 @@ export const DeleteUserDialog = ({ user }: { user: User }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <DeleteButton disabled={!user.status} />
+        <DeleteButton disabled={!route.status} />
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-left">Excluir Usuário</DialogTitle>
+          <DialogTitle className="text-left">Excluir Rota</DialogTitle>
 
           <DialogDescription className="text-left">
             <p className="py-4">
-              Deseja mesmo excluir <b>{user.name}</b>? Essa ação não pode ser
-              desfeita.
+              Deseja mesmo excluir <b>{getName(route)}</b>? Essa ação não pode
+              ser desfeita.
             </p>
           </DialogDescription>
         </DialogHeader>
@@ -73,7 +77,7 @@ export const DeleteUserDialog = ({ user }: { user: User }) => {
               variant="ghost"
               size="sm"
               disabled={isLoading}
-              onClick={() => mutate(user)}
+              onClick={() => mutate(route)}
             >
               Sim
             </Button>
