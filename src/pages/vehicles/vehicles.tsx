@@ -8,6 +8,7 @@ import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { TextField } from '@/components/layout/textfield';
+import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 import { normalizeString } from '@/lib/normalize';
 
@@ -16,6 +17,8 @@ import { FormDialog } from './form-dialog';
 import { columns } from './partials/vehicle-details';
 
 export const VehiclesPage = () => {
+  useTitle('Veículos');
+
   const [search, setSearch] = useState('');
 
   const {

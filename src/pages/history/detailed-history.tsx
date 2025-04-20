@@ -1,16 +1,16 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
-dayjs.extend(duration);
 
 import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
+import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
+
 import { HistoryCards } from './partials/history-cards';
 
 export const DetailedHistoryPage = () => {
+  useTitle('Histórico detalhado');
   const id = useParams().historyId;
 
   const { data, isLoading, error, refetch } = useQuery(['history', id], () =>

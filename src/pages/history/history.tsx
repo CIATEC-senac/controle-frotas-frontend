@@ -5,11 +5,14 @@ import { DataTable } from '@/components/layout/data-table';
 import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
+import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 import { getName } from '@/models/route.type';
+
 import { columns } from './partials/history-details';
 
 export const HistoryPage = () => {
+  useTitle('Histórico');
   const id = useParams().id;
 
   const {

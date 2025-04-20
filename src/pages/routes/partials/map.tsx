@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 
 type Poi = { key: string; location: google.maps.LatLngLiteral };
 
-const PoiMarkers = (props: { pois: Poi[] }) => {
+export const PoiMarkers = (props: { pois: Poi[] }) => {
   return (
     <React.Fragment>
       {props.pois.map((poi: Poi) => (
@@ -35,6 +35,7 @@ const Direction = ({ route }: { route: DetailedRoute }) => {
     useState<google.maps.DirectionsRenderer>();
 
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  // @ts-ignore
   const [routeIndex, setRouteIndex] = useState(0);
 
   const selected = routes[routeIndex];

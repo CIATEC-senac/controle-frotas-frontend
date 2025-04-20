@@ -10,11 +10,14 @@ import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 
 import { LoginForm } from './login.types';
 
 export const LoginPage = () => {
+  useTitle('Login');
+
   const navigate = useNavigate();
 
   const [state, setState] = useState<LoginForm>({ cpf: '', password: '' });

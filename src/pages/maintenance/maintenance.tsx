@@ -1,14 +1,19 @@
+import { useQuery } from 'react-query';
+
 import { CreateButton } from '@/components/layout/create-button';
 import { DataTable } from '@/components/layout/data-table';
 import { FetchError } from '@/components/layout/fetch-error';
 import { Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
+import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
-import { useQuery } from 'react-query';
+
 import { FormDialog } from './form-dialog';
 import { columns } from './partials/maintenance-details';
 
 export const MaintenancePage = () => {
+  useTitle('Manutenções');
+
   const { data, isLoading, error, refetch } = useQuery(['maintenances'], () =>
     new API().getMaintenances()
   );
