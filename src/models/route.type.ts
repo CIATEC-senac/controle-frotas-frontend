@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+
+import { leftPad } from '@/lib/left-pad';
+
 import { User } from './user.type';
 import { Vehicle } from './vehicle.type';
 
@@ -55,14 +58,4 @@ export const getName = (route: Route) => {
   // return `${originNeighborhood} - ${destinationNeighborhood}`;
 
   return 'Rota ' + leftPad(route.id!.toString(), 4, '0');
-};
-
-export const leftPad = (str: string, length: number, complete: string) => {
-  let padded = str;
-
-  while (padded.length < length) {
-    padded = complete + padded;
-  }
-
-  return padded;
 };

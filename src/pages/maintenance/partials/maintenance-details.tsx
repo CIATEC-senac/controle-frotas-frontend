@@ -26,8 +26,12 @@ export const MaintenanceActions = ({
 
 export const columns: ColumnDef<Maintenance>[] = [
   {
-    accessorKey: 'description',
     header: 'Descrição',
+    cell: ({ row }) => (
+      <span className="block max-w-[300px] break-words whitespace-normal">
+        {row.original.description}
+      </span>
+    ),
   },
   {
     header: 'Data',

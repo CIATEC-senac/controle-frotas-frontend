@@ -15,7 +15,7 @@ export class API {
 
   constructor() {
     // instancia Http com o ip do front com a porta do back
-    this.http = new Http(`http://${location.hostname}:3000`);
+    this.http = new Http(`http://192.168.15.12:3000`);
   }
 
   static handleError(e: Error, defaultMessage?: string) {

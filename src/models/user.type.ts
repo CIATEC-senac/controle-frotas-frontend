@@ -1,6 +1,7 @@
 import { format } from '@react-input/mask';
 
 import { Enterprise } from './enterprise.type';
+import { leftPad } from '@/lib/left-pad';
 
 export type User = {
   id: number;
@@ -13,6 +14,10 @@ export type User = {
   status: boolean;
   admittedAt: string;
   enterprise?: Enterprise;
+};
+
+export const getRegistration = (registration: string | undefined) => {
+  return leftPad(registration ?? '', 4, '0');
 };
 
 export const maskedCPF = (cpf: string | undefined) =>

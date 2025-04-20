@@ -2,7 +2,12 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { EditButton } from '@/components/layout/edit-button';
 import { Status } from '@/components/layout/status';
-import { maskedCPF, roleOptions, User } from '@/models/user.type';
+import {
+  getRegistration,
+  maskedCPF,
+  roleOptions,
+  User,
+} from '@/models/user.type';
 
 import { fromDate } from '@/lib/date-parser';
 import { DeleteUserDialog } from '../delete-dialog';
@@ -19,8 +24,8 @@ export const UserActions = ({ user }: { user: User }) => {
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: 'registration',
     header: 'Matrícula',
+    cell: ({ row }) => getRegistration(row.original.registration.toString()),
   },
   {
     accessorKey: 'name',

@@ -130,7 +130,7 @@ export const MaintenanceForm = ({
             <Label>Descrição</Label>
 
             <Textarea
-              className="max-h-[64px]"
+              className="max-h-[100px]"
               onChange={(e) => updateData('description', e.target.value)}
               value={state.description}
               disabled={isLoading}
