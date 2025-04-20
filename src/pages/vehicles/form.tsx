@@ -1,30 +1,21 @@
-import dayjs from 'dayjs';
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { z } from 'zod';
 
 import { FormLoading } from '@/components/layout/form-loading';
-import { TextField } from '@/components/layout/textfield';
-import { Button } from '@/components/ui/button';
-import { Combobox } from '@/components/ui/combobox';
-import { Label } from '@/components/ui/label';
+import { ResetButton } from '@/components/layout/reset-button';
+import { SaveButton } from '@/components/layout/save-button';
+import { FormCombobox, FormTextField } from '@/components/layout/textfield';
+import { Form } from '@/components/ui/form';
 import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
 import { maskedNumber, Vehicle } from '@/models/vehicle.type';
 import { FormAttr } from '@/types/form';
 
-export const fromModel = (vehicle?: Vehicle) => {
-  return {
-    id: vehicle?.id,
-    model: vehicle?.model,
-    capacity: vehicle?.capacity,
-    plate: vehicle?.plate,
-    type: vehicle?.type,
-    year: vehicle?.year,
-    status: vehicle?.status ?? true,
-    enterprise: vehicle?.enterprise,
-  } as Vehicle;
-};
+import { Enterprise } from '@/models/enterprise.type';
+import { toZod, vehicleSchema } from './form.validation';
 
 export const VehicleForm = ({
   data,
@@ -32,8 +23,6 @@ export const VehicleForm = ({
   onFailure,
 }: FormAttr<Vehicle>) => {
   const queryClient = useQueryClient();
-
-  const [state, setState] = useState(data);
 
   const { data: enterprises } = useQuery(['enterprises'], () =>
     new API().getEnterprises()
@@ -47,7 +36,7 @@ export const VehicleForm = ({
 
         const message = API.handleError(
           e,
-          state.id != undefined
+          data?.id != undefined
             ? 'Não foi possível editar veículo'
             : 'Não foi possível adicionar veículo'
         );
@@ -58,7 +47,7 @@ export const VehicleForm = ({
         queryClient.invalidateQueries(['vehicles']);
 
         toast.success(
-          state.id != undefined
+          data?.id != undefined
             ? 'Veículo editado com sucesso'
             : 'Veículo adicionado com sucesso',
           toastOptions()
@@ -69,17 +58,14 @@ export const VehicleForm = ({
     }
   );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateData(e.target.id as keyof Vehicle, e.target.value);
-  };
-
-  const updateData = (key: keyof Vehicle, value: any) => {
-    setState((state) => ({ ...state, [key]: value }));
+  const onSubmit = (values: z.infer<typeof vehicleSchema>) => {
+    mutate({
+      ...values,
+      id: Number(values.id) || undefined,
+      capacity: Number(values.capacity),
+      enterprise: { id: Number(values.enterprise) } as Enterprise,
+      year: Number(values.year),
+    } as Vehicle);
   };
 
   const enterprisesOptions = (enterprises || []).map((enterprise) => ({
@@ -87,76 +73,68 @@ export const VehicleForm = ({
     value: enterprise.id.toString(),
   }));
 
+  const form = useForm<z.infer<typeof vehicleSchema>>({
+    resolver: zodResolver(vehicleSchema),
+    defaultValues: toZod(data),
+  });
+
   return (
-    <form onSubmit={onSubmit}>
-      <FormLoading loading={isLoading} />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} onReset={onSuccess}>
+        <FormLoading loading={isLoading} />
 
-      <div className="space-y-6">
         <div className="space-y-6">
-          <TextField
-            onChange={onChange}
-            id="model"
-            label="Modelo"
-            value={state.model}
-            disabled={isLoading}
-          />
+          <div className="space-y-6">
+            <FormTextField
+              label="Modelo"
+              name="model"
+              control={form.control}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="plate"
-            label="Placa"
-            value={state.plate}
-            placeholder="AAA0000"
-            disabled={isLoading}
-          />
+            <FormTextField
+              label="Placa"
+              name="plate"
+              control={form.control}
+              placeholder="AAA0000"
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="year"
-            label="Ano"
-            value={maskedNumber(state.year, 4)}
-            placeholder={dayjs().year().toString()}
-            maxLength={4}
-            disabled={isLoading}
-          />
+            <FormTextField
+              label="Ano"
+              name="year"
+              mask={(value) => maskedNumber(Number(value), 4)}
+              control={form.control}
+              placeholder={new Date().getFullYear().toString()}
+              maxLength={4}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="capacity"
-            label="Capacidade"
-            value={maskedNumber(state.capacity, 2)}
-            placeholder="5"
-            maxLength={2}
-            disabled={isLoading}
-          />
+            <FormTextField
+              label="Capacidade"
+              name="capacity"
+              mask={(value) => maskedNumber(Number(value), 2)}
+              control={form.control}
+              placeholder="5"
+              maxLength={2}
+              disabled={isLoading}
+            />
 
-          <div className="grid gap-2">
-            <Label>Empresa</Label>
-
-            <Combobox
-              onChange={(id) => updateData('enterprise', { id: Number(id) })}
+            <FormCombobox
+              label="Empresa"
+              name="enterprise"
+              control={form.control}
               placeholder="Seleciona a empresa..."
-              value={state.enterprise?.id?.toString() ?? ''}
               options={enterprisesOptions}
             />
           </div>
-        </div>
 
-        <div className="w-full flex gap-3 justify-end">
-          <Button
-            disabled={isLoading}
-            variant="secondary"
-            type="reset"
-            onClick={onSuccess}
-          >
-            Cancelar
-          </Button>
-
-          <Button disabled={isLoading} type="submit">
-            Salvar
-          </Button>
+          <div className="w-full flex gap-3 justify-end">
+            <ResetButton disabled={isLoading} />
+            <SaveButton disabled={isLoading} />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };

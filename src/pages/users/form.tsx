@@ -10,6 +10,7 @@ import { SaveButton } from '@/components/layout/save-button';
 import { FormCombobox, FormTextField } from '@/components/layout/textfield';
 import { Form } from '@/components/ui/form';
 import { API } from '@/lib/api';
+import { toISO } from '@/lib/date-parser';
 import { toastOptions } from '@/lib/toast.options';
 import {
   maskedAdmittedAt,
@@ -19,7 +20,6 @@ import {
 } from '@/models/user.type';
 import { FormAttr } from '@/types/form';
 
-import { toISO } from '@/lib/date-parser';
 import { toZod, userSchema } from './form.validation';
 
 export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
