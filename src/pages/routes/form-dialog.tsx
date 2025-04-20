@@ -1,9 +1,9 @@
 import { JSX, useState } from 'react';
 
 import { FormDialog as BaseFormDialog } from '@/components/layout/form-dialog';
-
 import { Route } from '@/models/route.type';
-import { fromModel, RouteForm } from './form';
+
+import { RouteForm } from './form';
 
 export const FormDialog = ({
   title,
@@ -25,11 +25,7 @@ export const FormDialog = ({
       title={title}
       trigger={trigger}
     >
-      <RouteForm
-        onSuccess={close}
-        onFailure={() => {}}
-        data={fromModel(route)}
-      />
+      <RouteForm onSuccess={close} onFailure={() => {}} data={route} />
     </BaseFormDialog>
   );
 };

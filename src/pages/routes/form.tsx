@@ -1,46 +1,40 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Clock, MapPin, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
-
-import { TextField } from '@/components/layout/textfield';
-import { Button } from '@/components/ui/button';
-import { Combobox } from '@/components/ui/combobox';
-import { Label } from '@/components/ui/label';
-import { API } from '@/lib/api';
-import { toastOptions } from '@/lib/toast.options';
-import { Route } from '@/models/route.type';
-import { FormAttr } from '@/types/form';
+import { z } from 'zod';
 
 import { FormLoading } from '@/components/layout/form-loading';
+import { ResetButton } from '@/components/layout/reset-button';
+import { SaveButton } from '@/components/layout/save-button';
+import { FormCombobox, FormTextField } from '@/components/layout/textfield';
+import { Button } from '@/components/ui/button';
+import { Form } from '@/components/ui/form';
+import { API } from '@/lib/api';
+import { toastOptions } from '@/lib/toast.options';
+import { maskedStartAt, Route } from '@/models/route.type';
+import { User } from '@/models/user.type';
+import { Vehicle } from '@/models/vehicle.type';
+import { FormAttr } from '@/types/form';
+
+import { routeSchema, toZod } from './form.validation';
 import { RouteStop } from './stop';
-
-export const fromModel = (route?: Route) => {
-  const emptyPath = { origin: '', destination: '', stops: [''] };
-
-  return {
-    id: route?.id,
-    driver: route?.driver,
-    vehicle: route?.vehicle,
-    path: route?.path || emptyPath,
-    startAt: route?.startAt,
-  } as Route;
-};
 
 export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
   const queryClient = useQueryClient();
 
-  const [state, setState] = useState(data);
-
-  const { data: drivers } = useQuery(['drivers'], () =>
-    new API().getUsers().then((users) => users.filter((i) => i.role == 2))
+  const { data: drivers, isLoading: isLoadingDrivers } = useQuery(
+    ['drivers'],
+    () => new API().getUsers().then((users) => users.filter((i) => i.role == 2))
   );
 
-  const { data: vehicles } = useQuery(['vehicles'], () =>
-    new API().getVehicles()
+  const { data: vehicles, isLoading: isLoadingVehicles } = useQuery(
+    ['vehicles'],
+    () => new API().getVehicles()
   );
 
-  const { mutate, isLoading } = useMutation(
+  const { mutate, isLoading: isLoadingMutation } = useMutation(
     (route: Route) => new API().updateRoute(route),
     {
       onError: (e: any) => {
@@ -48,7 +42,7 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
 
         const message = API.handleError(
           e,
-          state.id != undefined
+          data?.id != undefined
             ? 'Não foi possível editar rota'
             : 'Não foi possível adicionar rota'
         );
@@ -59,7 +53,7 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
         queryClient.invalidateQueries(['routes']);
 
         toast.success(
-          state.id != undefined
+          data?.id != undefined
             ? 'Rota editada com sucesso'
             : 'Rota adicionada com sucesso',
           toastOptions()
@@ -70,47 +64,17 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
     }
   );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate(state);
+  const isLoading = isLoadingDrivers || isLoadingVehicles || isLoadingMutation;
+
+  const onSubmit = (values: z.infer<typeof routeSchema>) => {
+    mutate({
+      id: Number(values.id) || undefined,
+      driver: { id: Number(values.driver) } as User,
+      vehicle: { id: Number(values.vehicle) } as Vehicle,
+      startAt: values.startAt,
+      path: values.path,
+    } as Route);
   };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateData(e.target.id as keyof Route, e.target.value);
-  };
-
-  const updateData = (key: keyof Route, value: any) => {
-    setState((state) => ({ ...state, [key]: value }));
-  };
-
-  const addStop = () =>
-    setState((state) => ({
-      ...state,
-      path: { ...state.path, stops: [...state.path.stops, ''] },
-    }));
-
-  const deleteStop = (index: number) =>
-    setState((state) => {
-      const stops = [...state.path.stops];
-      stops.splice(index, 1);
-
-      return { ...state, path: { ...state.path, stops } };
-    });
-
-  const editStop = (stop: string, index: number) =>
-    setState((state) => {
-      const stops = [...state.path.stops];
-      stops[index] = stop;
-
-      return { ...state, path: { ...state.path, stops } };
-    });
-
-  const updatePath =
-    (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-      setState((state) => ({
-        ...state,
-        path: { ...state.path, [key]: e.target.value },
-      }));
 
   const driversOptions = (drivers || []).map((i) => ({
     label: i.name,
@@ -122,102 +86,112 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
     value: i.id.toString(),
   }));
 
+  const form = useForm<z.infer<typeof routeSchema>>({
+    resolver: zodResolver(routeSchema),
+    defaultValues: toZod(data),
+  });
+
+  const stops = form.watch('path.stops');
+
+  const addStop = () => {
+    form.setValue('path.stops', [...(form.getValues('path.stops') ?? []), '']);
+  };
+
+  const deleteStop = (index: number) => {
+    const stops = form.getValues('path.stops') ?? [];
+    // Remove index
+    stops.splice(index, 1);
+    form.setValue('path.stops', [...stops]);
+  };
+
   return (
-    <form onSubmit={onSubmit}>
-      <FormLoading loading={isLoading} />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} onReset={onSuccess}>
+        <FormLoading loading={isLoading} />
 
-      <div className="space-y-6">
         <div className="space-y-6">
-          <div className="flex flex-wrap gap-6">
-            <div className="grid gap-2 flex-[1]">
-              <Label>Veículo</Label>
-
-              <Combobox
-                onChange={(id) => updateData('vehicle', { id: Number(id) })}
-                placeholder="Seleciona o veículo..."
-                value={state.vehicle?.id?.toString() ?? ''}
-                options={vehiclesOptions}
-              />
-            </div>
-
-            <div className="grid gap-2 flex-[1]">
-              <Label>Motorista</Label>
-
-              <Combobox
-                onChange={(id) => updateData('driver', { id: Number(id) })}
-                placeholder="Seleciona o motorista..."
-                value={state.driver?.id?.toString() ?? ''}
-                options={driversOptions}
-              />
-            </div>
-          </div>
-
-          <TextField
-            label="Horário de Partida"
-            prefixIcon={<Clock size={16} />}
-            id="startAt"
-            onChange={onChange}
-            value={state.startAt}
-            placeholder="Digite a hora"
-            disabled={isLoading}
-          />
-
-          <TextField
-            label="Origem"
-            prefixIcon={<MapPin size={16} />}
-            onChange={updatePath('origin')}
-            value={state.path.origin}
-            placeholder="Digite o endereço de origem"
-            disabled={isLoading}
-          />
-
-          <TextField
-            label="Destino"
-            prefixIcon={<MapPin size={16} />}
-            onChange={updatePath('destination')}
-            value={state.path.destination}
-            placeholder="Digite o endereço de destino"
-            disabled={isLoading}
-          />
-
           <div className="space-y-6">
-            <div className="flex justify-between">
-              <h3>Paradas</h3>
+            <FormCombobox
+              label="Veículo"
+              name="vehicle"
+              control={form.control}
+              placeholder="Seleciona o veículo..."
+              options={vehiclesOptions}
+              disabled={isLoading}
+            />
 
-              <Button variant="ghost" onClick={addStop} disabled={isLoading}>
-                <Plus size={16} /> Adicionar Parada
-              </Button>
-            </div>
+            <FormCombobox
+              label="Motorista"
+              name="driver"
+              control={form.control}
+              placeholder="Seleciona o motorista..."
+              options={driversOptions}
+              disabled={isLoading}
+            />
 
-            <div className="space-y-3">
-              {state.path.stops.map((stop, index) => (
-                <RouteStop
-                  key={index}
-                  value={stop}
-                  disabled={isLoading}
-                  onChange={(e) => editStop(e.target.value, index)}
-                  onDelete={isLoading ? undefined : () => deleteStop(index)}
-                />
-              ))}
+            <FormTextField
+              label="Horário de Partida"
+              name="startAt"
+              control={form.control}
+              mask={maskedStartAt}
+              placeholder="Digite a hora"
+              prefixIcon={<Clock size={16} />}
+              disabled={isLoading}
+            />
+
+            <FormTextField
+              control={form.control}
+              label="Origem"
+              name="path.origin"
+              prefixIcon={<MapPin size={16} />}
+              placeholder="Digite o endereço de origem"
+              disabled={isLoading}
+            />
+
+            <FormTextField
+              control={form.control}
+              label="Destino"
+              name="path.destination"
+              prefixIcon={<MapPin size={16} />}
+              placeholder="Digite o endereço de destino"
+              disabled={isLoading}
+            />
+
+            <div className="space-y-6">
+              <div className="flex justify-between">
+                <h3>Paradas</h3>
+
+                <Button variant="ghost" onClick={addStop} disabled={isLoading}>
+                  <Plus size={16} /> Adicionar Parada
+                </Button>
+              </div>
+
+              {!stops?.length && (
+                <div className="flex justify-center">
+                  <span className="text-sm">Rota sem paradas</span>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {stops?.map((_, index) => (
+                  <RouteStop
+                    key={index}
+                    control={form.control}
+                    name={`path.stops.[${index}]`}
+                    disabled={isLoading}
+                    onDelete={isLoading ? undefined : () => deleteStop(index)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="w-full flex gap-3 justify-end">
-          <Button
-            disabled={isLoading}
-            variant="secondary"
-            type="reset"
-            onClick={onSuccess}
-          >
-            Cancelar
-          </Button>
-
-          <Button disabled={isLoading} type="submit">
-            Salvar
-          </Button>
+          <div className="w-full flex gap-3 justify-end">
+            <ResetButton disabled={isLoading} />
+            <SaveButton disabled={isLoading} />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };

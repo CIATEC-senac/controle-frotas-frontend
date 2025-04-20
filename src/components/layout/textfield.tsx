@@ -42,14 +42,14 @@ export const TextField = (props: TextFieldAtrr) => {
 };
 
 type FormAttr = {
-  label: string;
+  label?: string;
   name: string;
   description?: string;
   control: any;
   disabled?: boolean;
 };
 
-type FormTextFieldAttr = InputProps &
+export type FormTextFieldAttr = Omit<InputProps, 'label'> &
   FormAttr & { mask?: (data: string) => string };
 
 export const FormTextField = (props: FormTextFieldAttr) => {
@@ -65,8 +65,8 @@ export const FormTextField = (props: FormTextFieldAttr) => {
           mask != null ? mask((field.value as string) ?? '') : field.value;
 
         return (
-          <FormItem>
-            <FormLabel children={label} />
+          <FormItem className="flex-[1]">
+            {label && <FormLabel children={label} />}
             <FormControl
               children={<Input {...rest} {...field} value={masked} />}
             />
@@ -79,7 +79,8 @@ export const FormTextField = (props: FormTextFieldAttr) => {
   );
 };
 
-type FormComboboxAttr = Omit<ComboboxProps, 'onChange' | 'value'> & FormAttr;
+export type FormComboboxAttr = Omit<ComboboxProps, 'onChange' | 'value'> &
+  FormAttr;
 
 export const FormCombobox = (props: FormComboboxAttr) => {
   const { label, name, disabled, control, description, ...rest } = props;
