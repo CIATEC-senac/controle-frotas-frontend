@@ -1,6 +1,15 @@
 import { ReactNode } from 'react';
 
-import { Input } from '@/components/ui/input';
+import { Combobox, ComboboxProps } from '@/components/ui/combobox';
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input, InputProps } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import * as LabelPrimitive from '@radix-ui/react-label';
@@ -29,5 +38,65 @@ export const TextField = (props: TextFieldAtrr) => {
       {label != null ? <Label {...labelProps}>{label}</Label> : null}
       <Input {...rest} />
     </div>
+  );
+};
+
+type FormAttr = {
+  label: string;
+  name: string;
+  description?: string;
+  control: any;
+  disabled?: boolean;
+};
+
+type FormTextFieldAttr = InputProps &
+  FormAttr & { mask?: (data: string) => string };
+
+export const FormTextField = (props: FormTextFieldAttr) => {
+  const { label, name, disabled, control, description, mask, ...rest } = props;
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      disabled={disabled}
+      render={({ field }) => {
+        const masked =
+          mask != null ? mask((field.value as string) ?? '') : field.value;
+
+        return (
+          <FormItem>
+            <FormLabel children={label} />
+            <FormControl
+              children={<Input {...rest} {...field} value={masked} />}
+            />
+            {description && <FormDescription children={description} />}
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
+  );
+};
+
+type FormComboboxAttr = Omit<ComboboxProps, 'onChange' | 'value'> & FormAttr;
+
+export const FormCombobox = (props: FormComboboxAttr) => {
+  const { label, name, disabled, control, description, ...rest } = props;
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      disabled={disabled}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel children={label} />
+          <FormControl children={<Combobox {...field} {...rest} />} />
+          {description && <FormDescription children={description} />}
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
