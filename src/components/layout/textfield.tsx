@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ComponentType, ReactNode } from 'react';
 
 import { Combobox, ComboboxProps } from '@/components/ui/combobox';
 import {
@@ -50,10 +50,19 @@ type FormAttr = {
 };
 
 export type FormTextFieldAttr = Omit<InputProps, 'label'> &
-  FormAttr & { mask?: (data: string) => string };
+  FormAttr & { mask?: (data: string) => string; widget?: ComponentType };
 
 export const FormTextField = (props: FormTextFieldAttr) => {
-  const { label, name, disabled, control, description, mask, ...rest } = props;
+  const {
+    label,
+    name,
+    disabled,
+    control,
+    widget: Widget = Input,
+    description,
+    mask,
+    ...rest
+  } = props;
 
   return (
     <FormField
@@ -68,7 +77,7 @@ export const FormTextField = (props: FormTextFieldAttr) => {
           <FormItem className="flex-[1]">
             {label && <FormLabel children={label} />}
             <FormControl
-              children={<Input {...rest} {...field} value={masked} />}
+              children={<Widget {...rest} {...field} value={masked} />}
             />
             {description && <FormDescription children={description} />}
             <FormMessage />
@@ -80,7 +89,9 @@ export const FormTextField = (props: FormTextFieldAttr) => {
 };
 
 export type FormComboboxAttr = Omit<ComboboxProps, 'onChange' | 'value'> &
-  FormAttr;
+  FormAttr & {
+    onChange?: (value: string) => void;
+  };
 
 export const FormCombobox = (props: FormComboboxAttr) => {
   const { label, name, disabled, control, description, ...rest } = props;

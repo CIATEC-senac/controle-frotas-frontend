@@ -2,7 +2,7 @@ import { JSX, useState } from 'react';
 
 import { FormDialog as BaseFormDialog } from '@/components/layout/form-dialog';
 import { Maintenance } from '@/models/maintenance.type';
-import { fromModel, MaintenanceForm } from './form';
+import { MaintenanceForm } from './form';
 
 export const FormDialog = ({
   title,
@@ -27,7 +27,7 @@ export const FormDialog = ({
       <MaintenanceForm
         onSuccess={close}
         onFailure={() => {}}
-        data={fromModel(maintenance)}
+        data={maintenance}
       />
     </BaseFormDialog>
   );

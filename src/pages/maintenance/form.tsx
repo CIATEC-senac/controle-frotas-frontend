@@ -1,35 +1,28 @@
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { z } from 'zod';
 
 import { FormLoading } from '@/components/layout/form-loading';
-import { TextField } from '@/components/layout/textfield';
-import { Button } from '@/components/ui/button';
-import { Combobox } from '@/components/ui/combobox';
-import { Label } from '@/components/ui/label';
+import { ResetButton } from '@/components/layout/reset-button';
+import { SaveButton } from '@/components/layout/save-button';
+import { FormCombobox, FormTextField } from '@/components/layout/textfield';
+import { Form } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { API } from '@/lib/api';
-import { fromISO, toISO } from '@/lib/date-parser';
+import { toISO } from '@/lib/date-parser';
 import { toastOptions } from '@/lib/toast.options';
 import {
   Maintenance,
+  MaintenanceType,
   maintenanceTypeOptions,
   maskedMaintenanceDate,
 } from '@/models/maintenance.type';
 import { Vehicle } from '@/models/vehicle.type';
 import { FormAttr } from '@/types/form';
 
-export const fromModel = (maintenance?: Maintenance) => {
-  return {
-    id: maintenance?.id,
-    date: maintenance?.date
-      ? fromISO(maintenance?.date, 'DD/MM/YYYY HH:mm')
-      : '',
-    description: maintenance?.description,
-    vehicles: maintenance?.vehicles || [],
-    type: maintenance?.type ?? 0,
-  } as Maintenance;
-};
+import { maintenanceSchema, toZod } from './form.validation';
 
 export const MaintenanceForm = ({
   data,
@@ -37,8 +30,6 @@ export const MaintenanceForm = ({
   onFailure,
 }: FormAttr<Maintenance>) => {
   const queryClient = useQueryClient();
-
-  const [state, setState] = useState(data);
 
   const { data: vehicles } = useQuery(['vehicles'], () =>
     new API().getVehicles()
@@ -52,7 +43,7 @@ export const MaintenanceForm = ({
 
         const message = API.handleError(
           e,
-          state.id != undefined
+          data?.id != undefined
             ? 'Não foi possível editar manutenção'
             : 'Não foi possível adicionar manutenção'
         );
@@ -63,7 +54,7 @@ export const MaintenanceForm = ({
         queryClient.invalidateQueries(['maintenances']);
 
         toast.success(
-          state.id != undefined
+          data?.id != undefined
             ? 'Manutenção editada com sucesso'
             : 'Manutenção adicionada com sucesso',
           toastOptions()
@@ -74,19 +65,14 @@ export const MaintenanceForm = ({
     }
   );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (values: z.infer<typeof maintenanceSchema>) => {
     mutate({
-      ...state,
-      date: toISO(state.date),
+      id: Number(values.id) || undefined,
+      date: toISO(values.date, 'DD/MM/YYYY HH:mm'),
+      description: values.description,
+      type: Number(values.type) as MaintenanceType,
+      vehicles: values.vehicles.map((id) => ({ id: Number(id) } as Vehicle)),
     });
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    updateData(e.target.id as keyof Maintenance, e.target.value);
-
-  const updateData = (key: keyof Maintenance, value: any) => {
-    setState((state) => ({ ...state, [key]: value }));
   };
 
   const vehiclesOptions = (vehicles || []).map((vehicle) => ({
@@ -94,88 +80,73 @@ export const MaintenanceForm = ({
     value: vehicle.id.toString(),
   }));
 
-  const toggleVehicle = (id: number) => {
-    setState((state) => {
-      const vehicles = [...state.vehicles];
+  const form = useForm<z.infer<typeof maintenanceSchema>>({
+    resolver: zodResolver(maintenanceSchema),
+    defaultValues: toZod(data),
+  });
 
-      const index = vehicles.findIndex((vehicle) => vehicle.id === id);
+  const selectedVehicles = new Set(form.watch('vehicles'));
 
-      if (index != -1) {
-        vehicles.splice(index, 1);
-      } else {
-        vehicles.push({ id } as Vehicle);
-      }
+  const toggleVehicle = (id: string) => {
+    if (selectedVehicles.has(id)) {
+      selectedVehicles.delete(id);
+    } else {
+      selectedVehicles.add(id);
+    }
 
-      return { ...state, vehicles };
-    });
+    form.setValue('vehicles', [...selectedVehicles]);
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <FormLoading loading={isLoading} />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} onReset={onSuccess}>
+        <FormLoading loading={isLoading} />
 
-      <div className="space-y-6">
         <div className="space-y-6">
-          <TextField
-            onChange={onChange}
-            id="date"
-            label="Data"
-            placeholder="01/01/2025 12:00"
-            value={maskedMaintenanceDate(state.date)}
-            disabled={isLoading}
-            required
-          />
-
-          <div className="grid gap-2">
-            <Label>Descrição</Label>
-
-            <Textarea
-              className="max-h-[100px]"
-              onChange={(e) => updateData('description', e.target.value)}
-              value={state.description}
+          <div className="space-y-6">
+            <FormTextField
+              name="date"
+              label="Data"
+              control={form.control}
+              placeholder="01/01/2025 12:00"
+              mask={maskedMaintenanceDate}
               disabled={isLoading}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <Label>Tipo</Label>
+            <FormTextField
+              className="max-h-[100px]"
+              control={form.control}
+              widget={Textarea}
+              name="description"
+              label="Descrição"
+              disabled={isLoading}
+            />
 
-            <Combobox
-              onChange={(id) => updateData('type', Number(id))}
+            <FormCombobox
+              label="Tipo"
+              control={form.control}
+              name="type"
               placeholder="Seleciona o tipo..."
-              value={state.type.toString() ?? ''}
               options={maintenanceTypeOptions}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <Label>Veículos</Label>
-
-            <Combobox
-              onChange={(id) => toggleVehicle(Number(id))}
+            <FormCombobox
+              label="Veículos"
               placeholder="Seleciona o(s) veículo(s)..."
-              value={state.vehicles.map(({ id }) => id.toString()) ?? ''}
+              name="vehicles"
+              control={form.control}
               options={vehiclesOptions}
+              onChange={(id) => toggleVehicle(id)}
               multiple
             />
           </div>
-        </div>
 
-        <div className="w-full flex gap-3 justify-end">
-          <Button
-            disabled={isLoading}
-            variant="secondary"
-            type="reset"
-            onClick={onSuccess}
-          >
-            Cancelar
-          </Button>
-
-          <Button disabled={isLoading} type="submit">
-            Salvar
-          </Button>
+          <div className="w-full flex gap-3 justify-end">
+            <ResetButton disabled={isLoading} />
+            <SaveButton disabled={isLoading} />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };
