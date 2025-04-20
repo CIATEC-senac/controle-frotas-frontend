@@ -3,7 +3,7 @@ import { JSX, useState } from 'react';
 import { FormDialog as BaseFormDialog } from '@/components/layout/form-dialog';
 import { Vehicle } from '@/models/vehicle.type';
 
-import { fromModel, VehicleForm } from './form';
+import { VehicleForm } from './form';
 
 export const FormDialog = ({
   title,
@@ -25,11 +25,7 @@ export const FormDialog = ({
       title={title}
       trigger={trigger}
     >
-      <VehicleForm
-        onSuccess={close}
-        onFailure={() => {}}
-        data={fromModel(vehicle)}
-      />
+      <VehicleForm onSuccess={close} onFailure={() => {}} data={vehicle} />
     </BaseFormDialog>
   );
 };

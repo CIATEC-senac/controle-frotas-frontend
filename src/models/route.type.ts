@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import { leftPad } from '@/lib/left-pad';
 
+import { format } from '@react-input/mask';
 import { User } from './user.type';
 import { Vehicle } from './vehicle.type';
 
@@ -36,6 +37,12 @@ export type Route = {
 export type DetailedRoute = Route & {
   pathCoordinates: RoutePathCoordinates;
 };
+
+export const maskedStartAt = (startAt: string | undefined) =>
+  format(startAt ?? '', {
+    mask: '__:__',
+    replacement: { _: /\d/ },
+  });
 
 export const getNeighborhood = (path: string) => {
   return path.split('-').at(1)?.toUpperCase();

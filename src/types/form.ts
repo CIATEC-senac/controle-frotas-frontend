@@ -1,5 +1,5 @@
 export type FormAttr<T> = {
-  data: T;
+  data?: T;
   onSuccess: VoidFunction;
   onFailure: VoidFunction;
 };

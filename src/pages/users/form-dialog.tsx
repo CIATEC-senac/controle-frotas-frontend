@@ -2,7 +2,7 @@ import { JSX, useState } from 'react';
 
 import { FormDialog as BaseFormDialog } from '@/components/layout/form-dialog';
 import { User } from '@/models/user.type';
-import { fromModel, UserForm } from '@/pages/users/form';
+import { UserForm } from '@/pages/users/form';
 
 export const FormDialog = ({
   title,
@@ -24,7 +24,7 @@ export const FormDialog = ({
       title={title}
       trigger={trigger}
     >
-      <UserForm onSuccess={close} onFailure={() => {}} data={fromModel(user)} />
+      <UserForm onSuccess={close} onFailure={() => {}} data={user} />
     </BaseFormDialog>
   );
 };

@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { z } from 'zod';
 
 import { FormLoading } from '@/components/layout/form-loading';
-import { TextField } from '@/components/layout/textfield';
-import { Button } from '@/components/ui/button';
-import { Combobox } from '@/components/ui/combobox';
-import { Label } from '@/components/ui/label';
+import { ResetButton } from '@/components/layout/reset-button';
+import { SaveButton } from '@/components/layout/save-button';
+import { FormCombobox, FormTextField } from '@/components/layout/textfield';
+import { Form } from '@/components/ui/form';
 import { API } from '@/lib/api';
-import { fromISO, toISO } from '@/lib/date-parser';
+import { toISO } from '@/lib/date-parser';
 import { toastOptions } from '@/lib/toast.options';
 import {
   maskedAdmittedAt,
@@ -18,24 +20,10 @@ import {
 } from '@/models/user.type';
 import { FormAttr } from '@/types/form';
 
-export const fromModel = (user?: User) => {
-  return {
-    id: user?.id,
-    registration: user?.registration,
-    name: user?.name,
-    email: user?.email,
-    cpf: user?.cpf,
-    cnh: user?.cnh,
-    admittedAt: user?.admittedAt ? fromISO(user?.admittedAt, 'DD/MM/YYYY') : '',
-    status: user?.status ?? true,
-    role: user?.role ?? 2,
-  } as User;
-};
+import { toZod, userSchema } from './form.validation';
 
 export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
   const queryClient = useQueryClient();
-
-  const [state, setState] = useState(data);
 
   const { mutate, isLoading } = useMutation(
     (user: User) => new API().updateUser(user),
@@ -45,7 +33,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
 
         const message = API.handleError(
           e,
-          state.id != undefined
+          data?.id != undefined
             ? 'Não foi possível editar usuário'
             : 'Não foi possível adicionar usuário'
         );
@@ -56,7 +44,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
         queryClient.invalidateQueries(['users']);
 
         toast.success(
-          state.id != undefined
+          data?.id != undefined
             ? 'Usuário editado com sucesso'
             : 'Usuário adicionado com sucesso',
           toastOptions()
@@ -67,112 +55,98 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
     }
   );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (values: z.infer<typeof userSchema>) => {
     mutate({
-      ...state,
-      cpf: state.cpf?.replace(/[.-]/g, ''),
-      admittedAt: toISO(state.admittedAt, 'DD/MM/YYYY'),
-    });
+      ...values,
+      id: Number(values.id) || undefined,
+      registration: values.registration,
+      role: Number(values.role),
+      cpf: values.cpf?.replace(/[.-]/g, ''),
+      admittedAt: toISO(values.admittedAt),
+    } as User);
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    updateData(e.target.id as keyof User, e.target.value);
-
-  const updateData = (key: keyof User, value: any) => {
-    setState((state) => ({ ...state, [key]: value }));
-  };
+  const form = useForm<z.infer<typeof userSchema>>({
+    resolver: zodResolver(userSchema),
+    defaultValues: toZod(data),
+  });
 
   return (
-    <form onSubmit={onSubmit}>
-      <FormLoading loading={isLoading} />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} onReset={onSuccess}>
+        <FormLoading loading={isLoading} />
 
-      <div className="space-y-6">
         <div className="space-y-6">
-          <TextField
-            onChange={onChange}
-            id="registration"
-            label="Matrícula"
-            value={state.registration}
-            disabled={isLoading}
-            required
-          />
+          <div className="space-y-6">
+            <FormTextField
+              control={form.control}
+              name="registration"
+              label="Matrícula"
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="name"
-            label="Nome"
-            value={state.name}
-            disabled={isLoading}
-            required
-          />
+            <FormTextField
+              control={form.control}
+              name="name"
+              label="Nome"
+              maxLength={50}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="cpf"
-            label="CPF"
-            value={maskedCPF(state.cpf)}
-            maxLength={14}
-            disabled={isLoading}
-            required
-          />
+            <FormTextField
+              control={form.control}
+              name="cpf"
+              label="CPF"
+              placeholder="000.000.000-00"
+              maxLength={14}
+              mask={maskedCPF}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="email"
-            label="E-mail"
-            value={state.email}
-            disabled={isLoading}
-            required
-          />
+            <FormTextField
+              control={form.control}
+              name="email"
+              label="Email"
+              placeholder="usuario@alfaid.com.br"
+              maxLength={30}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="cnh"
-            label="CNH"
-            value={state.cnh}
-            maxLength={11}
-            disabled={isLoading}
-            required
-          />
+            <FormTextField
+              control={form.control}
+              name="cnh"
+              label="CNH"
+              placeholder="00000000000"
+              maxLength={11}
+              disabled={isLoading}
+            />
 
-          <TextField
-            onChange={onChange}
-            id="admittedAt"
-            label="Data Admissão"
-            value={maskedAdmittedAt(state.admittedAt)}
-            maxLength={10}
-            disabled={isLoading}
-            required
-          />
+            <FormTextField
+              control={form.control}
+              name="admittedAt"
+              label="Data Admissão"
+              placeholder="01/01/2025"
+              mask={maskedAdmittedAt}
+              maxLength={10}
+              disabled={isLoading}
+            />
 
-          <div className="grid gap-2">
-            <Label>Cargo</Label>
-
-            <Combobox
-              onChange={(id) => updateData('role', Number(id))}
+            <FormCombobox
+              control={form.control}
+              name="role"
+              label="Cargo"
               placeholder="Seleciona o cargo..."
-              value={state.role.toString() ?? ''}
               options={roleOptions}
+              disabled={isLoading}
             />
           </div>
-        </div>
 
-        <div className="w-full flex gap-3 justify-end">
-          <Button
-            disabled={isLoading}
-            variant="secondary"
-            type="reset"
-            onClick={onSuccess}
-          >
-            Cancelar
-          </Button>
-
-          <Button disabled={isLoading} type="submit">
-            Salvar
-          </Button>
+          <div className="w-full flex gap-3 justify-end">
+            <ResetButton disabled={isLoading} />
+            <SaveButton disabled={isLoading} />
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };

@@ -1,28 +1,27 @@
 import { Trash2 } from 'lucide-react';
 
-import { TextField, TextFieldAtrr } from '@/components/layout/textfield';
+import {
+  FormTextField,
+  FormTextFieldAttr,
+} from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
 
-export const RouteStop = ({
-  onDelete,
-  ...props
-}: TextFieldAtrr & { onDelete?: VoidFunction }) => {
+type RouteStopAttr = FormTextFieldAttr & {
+  onDelete?: VoidFunction;
+};
+
+export const RouteStop = ({ onDelete, ...props }: RouteStopAttr) => {
   return (
     <div className="flex justify-between gap-3">
-      <TextField
-        containerProps={{ style: { flex: 1 } }}
-        placeholder="Digite a parada..."
-        {...props}
-      />
+      <FormTextField placeholder="Digite a parada..." {...props} />
 
       <Button
         className="text-red-500 hover:text-red-500"
         size="icon"
         variant="ghost"
         onClick={onDelete}
-      >
-        <Trash2 />
-      </Button>
+        children={<Trash2 />}
+      />
     </div>
   );
 };

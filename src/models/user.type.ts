@@ -1,7 +1,8 @@
 import { format } from '@react-input/mask';
 
-import { Enterprise } from './enterprise.type';
 import { leftPad } from '@/lib/left-pad';
+
+import { Enterprise } from './enterprise.type';
 
 export type User = {
   id: number;
