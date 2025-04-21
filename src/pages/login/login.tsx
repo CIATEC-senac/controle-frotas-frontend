@@ -1,8 +1,8 @@
 import { format } from '@react-input/mask';
 import { AxiosError } from 'axios';
 import { Eye, EyeClosed, Lock, UserRound } from 'lucide-react';
-import { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -13,12 +13,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 
+import { useAuth } from '@/auth.context';
 import { LoginForm } from './login.types';
 
 export const LoginPage = () => {
   useTitle('Login');
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { setUser } = useAuth();
 
   const [state, setState] = useState<LoginForm>({ cpf: '', password: '' });
 
@@ -41,8 +44,12 @@ export const LoginPage = () => {
       },
       onSuccess: (token) => {
         // Salvar token
-        localStorage.setItem('token', token);
-        navigate('/');
+        sessionStorage.setItem('token', token);
+
+        new API().getTokenUser().then((user) => {
+          setUser(user);
+          navigate('/');
+        });
       },
     }
   );
@@ -70,6 +77,12 @@ export const LoginPage = () => {
     mask: '___.___.___-__',
     replacement: { _: /\d/ },
   });
+
+  // Reseta o app ao montar login
+  useEffect(() => {
+    queryClient.invalidateQueries(['user']);
+    sessionStorage.removeItem('token');
+  }, []);
 
   return (
     <main className="flex flex-col justify-center items-center gap-6 p-6 h-full">

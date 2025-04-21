@@ -26,8 +26,7 @@ export class Http {
   }
 
   private defaultHeaders() {
-    const token =
-      sessionStorage.getItem('token') || localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     return {
       'Content-Type': 'application/json',
@@ -47,7 +46,8 @@ export class Http {
       ...config.headers,
     };
 
-    await this.wait(500);
+    // Simular latência no local
+    location.hostname == 'localhost' && (await this.wait(500));
 
     return this.axios.request<T>(config);
   }

@@ -4,13 +4,19 @@ import { leftPad } from '@/lib/left-pad';
 
 import { Enterprise } from './enterprise.type';
 
+export enum UserRole {
+  admin = 0,
+  manager = 1,
+  driver = 2,
+}
+
 export type User = {
   id: number;
   registration: string;
   name: string;
   cpf: string;
   email: string;
-  role: number;
+  role: UserRole;
   cnh?: string;
   status: boolean;
   admittedAt: string;
