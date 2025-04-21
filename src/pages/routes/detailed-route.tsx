@@ -33,7 +33,7 @@ export const DetailedRoutePage = () => {
           <React.Fragment>
             <div className="absolute top-[10px] left-[10px] z-10">
               <Card className="rounded">
-                <CardContent className="flex flex-col gap-3">
+                <CardContent className="flex flex-col gap-3 text-sm">
                   <h3>{getName(route)}</h3>
 
                   <Detail

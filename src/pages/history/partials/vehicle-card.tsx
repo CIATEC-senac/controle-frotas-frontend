@@ -2,6 +2,7 @@ import { Bus } from 'lucide-react';
 
 import { History } from '@/models/history.type';
 import { getType } from '@/models/vehicle.type';
+
 import { Detail, SectionCard } from './history-cards';
 
 export const Tag = ({ text }: { text: string }) => {
@@ -9,6 +10,22 @@ export const Tag = ({ text }: { text: string }) => {
 };
 
 export const VehicleCard = ({ history }: { history: History }) => {
+  const odometerInitial = history.odometerInitial
+    ? history.odometerInitial.toString() + ' Km'
+    : undefined;
+
+  const odometerFinal = history.odometerFinal
+    ? history.odometerFinal.toString() + ' Km'
+    : undefined;
+
+  const OdometerImg = ({ src, alt }: { src?: string; alt: string }) => {
+    if (!src) {
+      return <span className="text-sm">Sem imagem</span>;
+    }
+
+    return <img width={100} src={src} alt={alt} />;
+  };
+
   return (
     <SectionCard icon={<Bus size={16} />} title="Veículo">
       <div className="space-y-2">
@@ -22,15 +39,15 @@ export const VehicleCard = ({ history }: { history: History }) => {
       </div>
 
       <div className="space-y-2">
-        <Detail
-          label="Odômetro inicial"
-          value={history.odometerInitial.toString() + ' Km'}
-        />
+        <Detail label="Odômetro inicial" value={odometerInitial} />
 
-        <Detail
-          label="Odômetro final"
-          value={history.odometerFinal.toString() + ' Km'}
-        />
+        <OdometerImg src={history.imgOdometerInitial} alt="Odômetro inicial" />
+      </div>
+
+      <div className="space-y-2">
+        <Detail label="Odômetro final" value={odometerFinal} />
+
+        <OdometerImg src={history.imgOdometerFinal} alt="Odômetro final" />
       </div>
     </SectionCard>
   );

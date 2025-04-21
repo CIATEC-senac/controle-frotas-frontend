@@ -11,6 +11,7 @@ import { HistoryCards } from './partials/history-cards';
 
 export const DetailedHistoryPage = () => {
   useTitle('Histórico detalhado');
+
   const id = useParams().historyId;
 
   const { data, isLoading, error, refetch } = useQuery(['history', id], () =>
@@ -32,7 +33,7 @@ export const DetailedHistoryPage = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
         <HistoryCards history={data!} />
       </div>
     );

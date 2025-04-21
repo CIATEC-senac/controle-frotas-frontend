@@ -35,7 +35,7 @@ export const columns: ColumnDef<Maintenance>[] = [
   },
   {
     header: 'Data',
-    cell: ({ row }) => fromDate(row.original.date, 'DD/MM/YYYY'),
+    cell: ({ row }) => fromDate(row.original.date, 'DD/MM/YYYY HH:mm'),
   },
   {
     header: 'Veículos',

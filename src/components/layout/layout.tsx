@@ -26,7 +26,9 @@ export const Layout = ({
           </div>
         </header>
 
-        <main className="flex flex-col flex-[1] p-6">{children}</main>
+        <main className="flex flex-col flex-[1] p-6 mx-auto w-[1280px] max-w-full">
+          {children}
+        </main>
       </div>
 
       <ToastContainer />

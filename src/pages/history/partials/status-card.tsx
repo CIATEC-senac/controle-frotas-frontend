@@ -12,9 +12,16 @@ export const StatusCard = ({ approval }: { approval?: HistoryApproval }) => {
 
       {approval && (
         <React.Fragment>
-          <Detail label="Aprovada por" value={approval.approvedBy.name} />
+          <Detail label="Responsável" value={approval.approvedBy.name} />
 
-          <Detail label="Aprovada em" value={fromDate(approval.date)} />
+          <Detail label="Data" value={fromDate(approval.date)} />
+
+          {approval.observation && (
+            <React.Fragment>
+              <p className="text-gray-500 text-sm">Observação:</p>
+              <p className="text-sm">{approval.observation ?? 'N/A'}</p>
+            </React.Fragment>
+          )}
         </React.Fragment>
       )}
     </SectionCard>

@@ -12,22 +12,26 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
     2
   );
 
-  const elapsedDistance = (
-    history.odometerFinal - history.odometerInitial
-  ).toFixed(2);
+  const elapsedDistance =
+    history.odometerFinal && history.odometerInitial
+      ? (history.odometerFinal - history.odometerInitial).toFixed(2) + ' Km'
+      : undefined;
 
-  const estimatedDuration = Math.ceil(
-    dayjs.duration(history.route.estimatedDuration!, 'seconds').asMinutes()
-  );
+  const estimatedDuration = history.route.estimatedDuration
+    ? Math.ceil(
+        dayjs.duration(history.route.estimatedDuration, 'seconds').asMinutes()
+      ) + ' minutos'
+    : undefined;
 
-  const elapsedDuration = Math.ceil(
-    dayjs(history.startedAt).diff(history.endedAt, 'minutes')
-  );
+  const elapsedDuration = history.startedAt
+    ? Math.ceil(dayjs(history.startedAt).diff(history.endedAt, 'minutes')) +
+      ' minutos'
+    : undefined;
 
   const waypoints = [
-    history.route.pathCoordinates.origin,
-    ...history.route.pathCoordinates.stops,
-    history.route.pathCoordinates.destination,
+    history.route.pathCoordinates?.origin,
+    ...history.route.pathCoordinates?.stops,
+    history.route.pathCoordinates?.destination,
   ];
 
   const getLatLng = (coordinates: LatLng) => {
@@ -35,12 +39,17 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
   };
 
   return (
-    <SectionCard icon={<Map size={16} />} title="Rota Planejada">
-      <div className="flex flex-wrap gap-6">
-        <div className="flex-[1] min-w-[400px]">
+    <SectionCard
+      className="col-span-2"
+      icon={<Map size={16} />}
+      title="Rota Planejada"
+    >
+      <div className="flex flex-col md:grid lg:grid-cols-2 gap-6">
+        <div className="flex-[1]">
           <StaticGoogleMap
             size="640x360"
             apiKey="AIzaSyAtnsmelP2XXZQxSgDOnn9ra2RLv3LOKWA"
+            className="max-w-full"
           >
             <Direction
               origin={getLatLng(history.route.pathCoordinates.origin)}
@@ -63,36 +72,30 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
         </div>
 
         <div className="flex-[1] space-y-3">
-          <Detail label="Origem" value={history.path.origin.toUpperCase()} />
+          <Detail label="Origem" value={history.path?.origin.toUpperCase()} />
 
           <Detail
             label="Destino"
-            value={history.path.destination.toUpperCase()}
-          />
-
-          <Detail label="Partida" value={fromDate(history.startedAt)} />
-
-          <Detail label="Chegada" value={fromDate(history.endedAt)} />
-
-          <Detail
-            label="Duração prevista"
-            value={estimatedDuration + ' minutos'}
+            value={history.path?.destination.toUpperCase()}
           />
 
           <Detail
-            label="Duração executada"
-            value={elapsedDuration + ' minutos'}
+            label="Partida"
+            value={history.startedAt ? fromDate(history.startedAt) : undefined}
           />
 
           <Detail
-            label="Distância prevista"
-            value={estimatedDistance + ' Km'}
+            label="Chegada"
+            value={history.endedAt ? fromDate(history.endedAt) : undefined}
           />
 
-          <Detail
-            label="Distância percorrida"
-            value={elapsedDistance + ' Km'}
-          />
+          <Detail label="Duração prevista" value={estimatedDuration} />
+
+          <Detail label="Duração executada" value={elapsedDuration} />
+
+          <Detail label="Distância prevista" value={estimatedDistance} />
+
+          <Detail label="Distância percorrida" value={elapsedDistance} />
         </div>
       </div>
     </SectionCard>
