@@ -8,7 +8,7 @@ export const HomePage = () => {
 
   return (
     <Layout title="Home">
-      <div className="flex flex-col gap-y-3">
+      <div className="flex flex-col gap-y-6">
         <ScheduledRoutes />
         <ScheduledMaintenances />
       </div>

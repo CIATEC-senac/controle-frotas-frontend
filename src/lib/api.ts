@@ -100,6 +100,12 @@ export class API {
       .then(({ data }) => data);
   }
 
+  public async getOnGoingRoutesHistory() {
+    return this.http
+      .request<History[]>('/history/status/ongoing')
+      .then(({ data }) => data);
+  }
+
   public async getRoute(id: number) {
     return this.http
       .request<DetailedRoute>(`/route/${id}`)
@@ -133,9 +139,9 @@ export class API {
       .then(({ data }) => data);
   }
 
-  public async getMaintenances() {
+  public async getMaintenances(from?: Date, to?: Date) {
     return this.http
-      .request<Maintenance[]>('/maintenance')
+      .request<Maintenance[]>('/maintenance', { params: { from, to } })
       .then(({ data }) => data);
   }
 

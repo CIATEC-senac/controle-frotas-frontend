@@ -1,10 +1,15 @@
 import dayjs from 'dayjs';
 import { Map } from 'lucide-react';
-import { Direction, Marker, StaticGoogleMap } from 'react-static-google-map';
+import {
+  Direction,
+  Marker,
+  StaticGoogleMap,
+} from 'react-static-google-map-with-waypoints';
 
 import { fromDate } from '@/lib/date-parser';
 import { History } from '@/models/history.type';
 import { LatLng } from '@/models/route.type';
+
 import { Detail, SectionCard } from './history-cards';
 
 export const ScheduledRouteCard = ({ history }: { history: History }) => {
@@ -53,6 +58,7 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
           >
             <Direction
               origin={getLatLng(history.route.pathCoordinates.origin)}
+              waypoints={history.route.pathCoordinates.stops}
               destination={getLatLng(history.route.pathCoordinates.destination)}
             />
 
