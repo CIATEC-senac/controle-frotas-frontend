@@ -2,11 +2,11 @@ import {
   Bus,
   ChartLine,
   Home,
-  ListChecks,
   Map,
-  User,
+  User as UserIcon,
   Wrench,
 } from 'lucide-react';
+import { useQuery } from 'react-query';
 import { Link } from 'react-router';
 
 import {
@@ -19,6 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { User, UserRole } from '@/models/user.type';
 
 type AppRoutingDetails = {
   title: string;
@@ -26,17 +27,20 @@ type AppRoutingDetails = {
   icon: any;
 };
 
-// define itens do sidebar com título, caminho e icone
 const generalRoutes: AppRoutingDetails[] = [
   {
     title: 'Home',
     url: '/',
     icon: Home,
   },
+];
+
+// define itens do sidebar com título, caminho e icone
+const adminRoutes: AppRoutingDetails[] = [
   {
     title: 'Usuários',
     url: '/users',
-    icon: User,
+    icon: UserIcon,
   },
   {
     title: 'Rotas',
@@ -61,17 +65,28 @@ const managerRoutes: AppRoutingDetails[] = [
     url: '/dashboard',
     icon: ChartLine,
   },
-  {
-    title: 'Aprovação',
-    url: '/dashboard',
-    icon: ListChecks,
-  },
 ];
 
-const renderGroup = (items: AppRoutingDetails[], title: string) => {
+const RenderGroup = ({
+  items,
+  title,
+  roles,
+}: {
+  items: AppRoutingDetails[];
+  title?: string;
+  roles?: UserRole[];
+}) => {
+  const { data: user } = useQuery<User>(['user']);
+
+  console.log(title, roles, user?.role);
+
+  if (roles?.length && !roles.includes(user?.role!)) {
+    return null;
+  }
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{title}</SidebarGroupLabel>
+      {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -94,8 +109,19 @@ export const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarContent>
-        {renderGroup(managerRoutes, 'Gestor')}
-        {renderGroup(generalRoutes, 'Admin')}
+        <RenderGroup items={generalRoutes} />
+
+        <RenderGroup
+          title="Gestor"
+          roles={[UserRole.admin, UserRole.manager]}
+          items={managerRoutes}
+        />
+
+        <RenderGroup
+          title="Administrador"
+          roles={[UserRole.admin]}
+          items={adminRoutes}
+        />
       </SidebarContent>
     </Sidebar>
   );

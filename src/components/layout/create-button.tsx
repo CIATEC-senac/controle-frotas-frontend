@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export const CreateButton = React.forwardRef<
   HTMLButtonElement,
-  { title: string }
+  React.ComponentProps<'button'> & { title: string }
 >(({ title, ...props }, ref) => {
   return (
     <Button className="h-[40px]" {...props} ref={ref}>

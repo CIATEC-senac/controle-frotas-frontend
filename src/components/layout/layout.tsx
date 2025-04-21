@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
+import { Link } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 
 import { AppSidebar } from '@/components/layout/app-sidebar';
+import { Button } from '@/components/ui/button';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 export const Layout = ({
@@ -21,9 +23,13 @@ export const Layout = ({
             <SidebarTrigger />
           </div>
 
-          <div>
+          <div className="flex-[1]">
             <h1>{title}</h1>
           </div>
+
+          <Button variant="link" className="text-black font-normal" asChild>
+            <Link to="/login">Sair</Link>
+          </Button>
         </header>
 
         <main className="flex flex-col flex-[1] p-6 mx-auto w-[1280px] max-w-full">

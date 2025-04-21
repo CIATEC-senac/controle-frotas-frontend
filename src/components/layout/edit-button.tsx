@@ -3,7 +3,10 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 
-export const EditButton = React.forwardRef<HTMLButtonElement>((props, ref) => {
+export const EditButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentProps<'button'>
+>((props, ref) => {
   return (
     <Button
       variant="ghost"
