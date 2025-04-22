@@ -45,7 +45,7 @@ export const maskedAdmittedAt = (admittedAt: string | undefined) =>
     replacement: { _: /\d/ },
   });
 
-export const getRole = (type: UserRole) => {
+export const getRole = (type?: UserRole) => {
   switch (type) {
     case UserRole.ADMIN:
       return 'Administrador';
@@ -53,6 +53,8 @@ export const getRole = (type: UserRole) => {
       return 'Gerente';
     case UserRole.DRIVER:
       return 'Motorista';
+    default:
+      return 'N/A';
   }
 };
 
