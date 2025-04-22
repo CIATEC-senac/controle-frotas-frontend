@@ -21,6 +21,7 @@ export const App = () => {
   const { data: user, isLoading } = useQuery(['user'], () =>
     new API().getTokenUser()
   );
+
   const defaultRoles = [UserRole.ADMIN, UserRole.MANAGER];
 
   const getProtectedRoute = (element: JSX.Element, roles: UserRole[]) => {
