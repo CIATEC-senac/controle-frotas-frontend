@@ -4,8 +4,9 @@ import { EditButton } from '@/components/layout/edit-button';
 import { Status } from '@/components/layout/status';
 import {
   getRegistration,
+  getRole,
+  getSource,
   maskedCPF,
-  roleOptions,
   User,
 } from '@/models/user.type';
 
@@ -41,9 +42,11 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     header: 'Cargo',
-    cell: ({ row }) =>
-      roleOptions.find((role) => role.value === row.original.role.toString())
-        ?.label,
+    cell: ({ row }) => getRole(row.original.role),
+  },
+  {
+    header: 'Tipo',
+    cell: ({ row }) => getSource(row.original.source),
   },
   {
     header: 'Data de Admissão',

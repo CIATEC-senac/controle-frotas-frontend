@@ -5,9 +5,14 @@ import { leftPad } from '@/lib/left-pad';
 import { Enterprise } from './enterprise.type';
 
 export enum UserRole {
-  admin = 0,
-  manager = 1,
-  driver = 2,
+  ADMIN = 0,
+  MANAGER = 1,
+  DRIVER = 2,
+}
+
+export enum UserSource {
+  INSOURCED = 0,
+  OUTSOURCED = 1,
 }
 
 export type User = {
@@ -19,6 +24,7 @@ export type User = {
   role: UserRole;
   cnh?: string;
   status: boolean;
+  source?: UserSource;
   admittedAt: string;
   enterprise?: Enterprise;
 };
@@ -39,17 +45,50 @@ export const maskedAdmittedAt = (admittedAt: string | undefined) =>
     replacement: { _: /\d/ },
   });
 
+export const getRole = (type: UserRole) => {
+  switch (type) {
+    case UserRole.ADMIN:
+      return 'Administrador';
+    case UserRole.MANAGER:
+      return 'Gerente';
+    case UserRole.DRIVER:
+      return 'Motorista';
+  }
+};
+
 export const roleOptions = [
   {
-    label: 'Admin',
-    value: '0',
+    label: getRole(UserRole.ADMIN),
+    value: UserRole.ADMIN.toString(),
   },
   {
-    label: 'Gerente',
-    value: '1',
+    label: getRole(UserRole.MANAGER),
+    value: UserRole.MANAGER.toString(),
   },
   {
-    label: 'Motorista',
-    value: '2',
+    label: getRole(UserRole.DRIVER),
+    value: UserRole.DRIVER.toString(),
+  },
+];
+
+export const getSource = (source?: UserSource) => {
+  switch (source) {
+    case UserSource.INSOURCED:
+      return 'Efetivado';
+    case UserSource.OUTSOURCED:
+      return 'Terceirizado';
+    default:
+      return 'N/A';
+  }
+};
+
+export const sourceOptions = [
+  {
+    label: getSource(UserSource.INSOURCED),
+    value: UserSource.INSOURCED.toString(),
+  },
+  {
+    label: getSource(UserSource.OUTSOURCED),
+    value: UserSource.OUTSOURCED.toString(),
   },
 ];

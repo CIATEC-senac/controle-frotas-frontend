@@ -3,7 +3,12 @@ import { format } from '@react-input/mask';
 import { Enterprise } from './enterprise.type';
 import { Maintenance } from './maintenance.type';
 
-type VehicleType = 'bus' | 'car' | 'minibus' | 'van';
+export enum VehicleType {
+  BUS = 'bus',
+  CAR = 'car',
+  MINIBUS = 'minibus',
+  VAN = 'van',
+}
 
 export type Vehicle = {
   id: number;
@@ -19,13 +24,13 @@ export type Vehicle = {
 
 export const getType = (type: VehicleType) => {
   switch (type) {
-    case 'bus':
+    case VehicleType.BUS:
       return 'Ônibus';
-    case 'car':
+    case VehicleType.CAR:
       return 'Carro';
-    case 'minibus':
+    case VehicleType.MINIBUS:
       return 'Micro-Ônibus';
-    case 'van':
+    case VehicleType.VAN:
       return 'Van';
   }
 };
@@ -35,3 +40,22 @@ export const maskedNumber = (number: number | undefined, length: number) =>
     mask: Array(length).fill('_').join(''),
     replacement: { _: /\d/ },
   });
+
+export const vehicleTypeOptions = [
+  {
+    label: getType(VehicleType.BUS),
+    value: VehicleType.BUS,
+  },
+  {
+    label: getType(VehicleType.CAR),
+    value: VehicleType.CAR,
+  },
+  {
+    label: getType(VehicleType.VAN),
+    value: VehicleType.VAN,
+  },
+  {
+    label: getType(VehicleType.MINIBUS),
+    value: VehicleType.MINIBUS,
+  },
+];

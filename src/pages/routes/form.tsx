@@ -104,6 +104,11 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
     form.setValue('path.stops', [...stops]);
   };
 
+  const vehicleId = form.watch('vehicle');
+
+  const maxCapacity: number =
+    vehicles?.find(({ id }) => id == Number(vehicleId))?.capacity ?? 0;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} onReset={onSuccess}>
@@ -159,9 +164,13 @@ export const RouteForm = ({ data, onSuccess, onFailure }: FormAttr<Route>) => {
 
             <div className="space-y-6">
               <div className="flex justify-between">
-                <h3>Paradas</h3>
+                <h3>Paradas (máximo de {maxCapacity})</h3>
 
-                <Button variant="ghost" onClick={addStop} disabled={isLoading}>
+                <Button
+                  variant="ghost"
+                  onClick={addStop}
+                  disabled={isLoading || (stops?.length ?? 0) >= maxCapacity}
+                >
                   <Plus size={16} /> Adicionar Parada
                 </Button>
               </div>

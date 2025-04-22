@@ -50,7 +50,7 @@ export const RouteQrCode = ({ route }: { route: Route }) => {
       </DialogTrigger>
 
       <DialogContent className="p-0 gap-0">
-        <div className="p-6" ref={printRef}>
+        <div className="p-6 pb-0" ref={printRef}>
           <DialogHeader>
             <DialogTitle className="text-left pb-6">
               Rota {getName(route)}
@@ -70,7 +70,7 @@ export const RouteQrCode = ({ route }: { route: Route }) => {
               value={route.path.destination.toUpperCase()}
             />
 
-            <div className="w-[128px] my-6 mx-auto">
+            <div className="w-[192px] my-6 mx-auto">
               <QrCodeComponent
                 size={256}
                 className="max-w-full w-full h-auto"

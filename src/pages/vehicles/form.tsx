@@ -11,7 +11,11 @@ import { FormCombobox, FormTextField } from '@/components/layout/textfield';
 import { Form } from '@/components/ui/form';
 import { API } from '@/lib/api';
 import { toastOptions } from '@/lib/toast.options';
-import { maskedNumber, Vehicle } from '@/models/vehicle.type';
+import {
+  maskedNumber,
+  Vehicle,
+  vehicleTypeOptions,
+} from '@/models/vehicle.type';
 import { FormAttr } from '@/types/form';
 
 import { Enterprise } from '@/models/enterprise.type';
@@ -126,6 +130,14 @@ export const VehicleForm = ({
               control={form.control}
               placeholder="Seleciona a empresa..."
               options={enterprisesOptions}
+            />
+
+            <FormCombobox
+              label="Tipo"
+              name="type"
+              control={form.control}
+              placeholder="Seleciona o tipo..."
+              options={vehicleTypeOptions}
             />
           </div>
 

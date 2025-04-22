@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 
 import { EditButton } from '@/components/layout/edit-button';
-import { Vehicle } from '@/models/vehicle.type';
+import { getType, Vehicle } from '@/models/vehicle.type';
 
 import { fromDate } from '@/lib/date-parser';
 import dayjs from 'dayjs';
@@ -35,8 +35,8 @@ export const columns: ColumnDef<Vehicle>[] = [
     header: 'Ano',
   },
   {
-    accessorKey: 'type',
     header: 'Tipo',
+    cell: ({ row }) => getType(row.original.type),
   },
   {
     header: 'Capacidade',

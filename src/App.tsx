@@ -21,7 +21,7 @@ export const App = () => {
   const { data: user, isLoading } = useQuery(['user'], () =>
     new API().getTokenUser()
   );
-  const defaultRoles = [UserRole.admin, UserRole.manager];
+  const defaultRoles = [UserRole.ADMIN, UserRole.MANAGER];
 
   const getProtectedRoute = (element: JSX.Element, roles: UserRole[]) => {
     return <ProtectedRoute roles={roles} children={element} />;
@@ -77,7 +77,7 @@ export const App = () => {
             path="/"
             element={getProtectedRoute(<HomePage />, [
               ...defaultRoles,
-              UserRole.driver,
+              UserRole.DRIVER,
             ])}
           />
         </Routes>

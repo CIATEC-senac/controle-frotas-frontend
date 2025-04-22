@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
@@ -23,6 +24,7 @@ export type ComboboxOption = { label: string; value: string }[];
 export type ComboboxProps = {
   options: ComboboxOption;
   placeholder: string;
+  inputPlaceholder?: string;
   onChange: (value: string) => void;
   value: string | string[];
   multiple?: boolean;
@@ -31,6 +33,7 @@ export type ComboboxProps = {
 export function Combobox({
   options,
   placeholder,
+  inputPlaceholder,
   onChange,
   value,
   multiple,
@@ -83,6 +86,8 @@ export function Combobox({
         className="w-[var(--radix-popover-trigger-width)] p-0 z-50"
       >
         <Command>
+          {inputPlaceholder && <CommandInput placeholder={inputPlaceholder} />}
+
           <CommandList>
             <CommandGroup>
               {options.map((option) => (
