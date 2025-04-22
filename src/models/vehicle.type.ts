@@ -22,7 +22,7 @@ export type Vehicle = {
   enterprise?: Partial<Enterprise>;
 };
 
-export const getType = (type: VehicleType) => {
+export const getType = (type?: VehicleType) => {
   switch (type) {
     case VehicleType.BUS:
       return 'Ônibus';
@@ -32,6 +32,8 @@ export const getType = (type: VehicleType) => {
       return 'Micro-Ônibus';
     case VehicleType.VAN:
       return 'Van';
+    default:
+      return 'N/A';
   }
 };
 

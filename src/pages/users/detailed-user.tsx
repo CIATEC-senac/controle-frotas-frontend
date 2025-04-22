@@ -46,6 +46,7 @@ export const DetailedUserPage = () => {
           <CardHeader>
             <CardTitle>Informações de registro</CardTitle>
           </CardHeader>
+
           <CardContent>
             <div className="flex flex-col gap-3">
               <Detail label="Nome" value={data?.name} />
@@ -71,6 +72,7 @@ export const DetailedUserPage = () => {
           <CardHeader>
             <CardTitle>Informações pessoais</CardTitle>
           </CardHeader>
+
           <CardContent>
             <div className="flex flex-col gap-3">
               <Detail label="CPF" value={maskedCPF(data?.cpf)} />

@@ -1,10 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
+import dayjs from 'dayjs';
+import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router';
 
 import { EditButton } from '@/components/layout/edit-button';
+import { Button } from '@/components/ui/button';
+import { fromDate } from '@/lib/date-parser';
 import { getType, Vehicle } from '@/models/vehicle.type';
 
-import { fromDate } from '@/lib/date-parser';
-import dayjs from 'dayjs';
 import { DeleteVehicleDialog } from '../delete-dialog';
 import { FormDialog } from '../form-dialog';
 
@@ -23,8 +26,15 @@ export const VehicleActions = ({ vehicle }: { vehicle: Vehicle }) => {
 
 export const columns: ColumnDef<Vehicle>[] = [
   {
-    accessorKey: 'plate',
     header: 'Placa',
+    cell: ({ row }) => (
+      <Button variant="link" asChild>
+        <Link to={`/vehicle/${row.original.id}`}>
+          {row.original.plate}
+          <ExternalLink />
+        </Link>
+      </Button>
+    ),
   },
   {
     accessorKey: 'model',

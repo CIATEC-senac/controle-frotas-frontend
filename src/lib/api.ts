@@ -74,6 +74,12 @@ export class API {
     return this.http.request<Vehicle[]>('/vehicle').then(({ data }) => data);
   }
 
+  public async getVehicle(id: number) {
+    return this.http
+      .request<Vehicle>(`/vehicle/${id}`)
+      .then(({ data }) => data);
+  }
+
   public async updateVehicle(vehicle: Vehicle) {
     return await this.http
       .request<Vehicle>('/vehicle', {
