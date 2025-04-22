@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import { useQuery } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { UserRole } from '@/models/user.type';
@@ -15,7 +16,6 @@ import { UsersPage } from '@/pages/users/users';
 import { DetailedVehiclePage } from '@/pages/vehicles/detailed-vehicle';
 import { VehiclesPage } from '@/pages/vehicles/vehicles';
 
-import { useQuery } from 'react-query';
 import { AuthProvider } from './auth.context';
 import { API } from './lib/api';
 import { ProtectedRoute } from './protected-route';

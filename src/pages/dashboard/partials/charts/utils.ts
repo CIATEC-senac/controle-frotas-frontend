@@ -1,5 +1,5 @@
 import { ChartConfig } from '@/components/ui/chart';
-import { PerformanceStat } from '@/types/performace-stat';
+import { PerformanceStat } from '@/types/performance-stat';
 import { chartColors } from './colors';
 
 const capitalizeFirstLetter = (value: string) => {
