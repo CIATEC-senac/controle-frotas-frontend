@@ -49,8 +49,8 @@ export class API {
     return this.http.request<User>('/token').then(({ data }) => data);
   }
 
-  public async getUser() {
-    return this.http.request<User>('/user').then(({ data }) => data);
+  public async getUser(id: number) {
+    return this.http.request<User>(`/user/${id}`).then(({ data }) => data);
   }
 
   public async updateUser(user: User) {

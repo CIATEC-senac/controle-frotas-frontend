@@ -15,6 +15,7 @@ import { JSX } from 'react';
 import { useQuery } from 'react-query';
 import { AuthProvider } from './auth.context';
 import { API } from './lib/api';
+import { DetailedUserPage } from './pages/users/detailed-user';
 import { ProtectedRoute } from './protected-route';
 
 export const App = () => {
@@ -42,6 +43,11 @@ export const App = () => {
           <Route
             path="/users"
             element={getProtectedRoute(<UsersPage />, defaultRoles)}
+          />
+
+          <Route
+            path="/user/:id"
+            element={getProtectedRoute(<DetailedUserPage />, defaultRoles)}
           />
 
           <Route
