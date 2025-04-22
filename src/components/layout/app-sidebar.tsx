@@ -111,13 +111,13 @@ export const AppSidebar = () => {
 
         <RenderGroup
           title="Gestor"
-          roles={[UserRole.admin, UserRole.manager]}
+          roles={[UserRole.ADMIN, UserRole.MANAGER]}
           items={managerRoutes}
         />
 
         <RenderGroup
           title="Administrador"
-          roles={[UserRole.admin]}
+          roles={[UserRole.ADMIN]}
           items={adminRoutes}
         />
       </SidebarContent>

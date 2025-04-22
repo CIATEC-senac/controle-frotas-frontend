@@ -1,15 +1,19 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router';
 
 import { EditButton } from '@/components/layout/edit-button';
 import { Status } from '@/components/layout/status';
+import { Button } from '@/components/ui/button';
+import { fromDate } from '@/lib/date-parser';
 import {
   getRegistration,
+  getRole,
+  getSource,
   maskedCPF,
-  roleOptions,
   User,
 } from '@/models/user.type';
 
-import { fromDate } from '@/lib/date-parser';
 import { DeleteUserDialog } from '../delete-dialog';
 import { FormDialog } from '../form-dialog';
 
@@ -25,7 +29,14 @@ export const UserActions = ({ user }: { user: User }) => {
 export const columns: ColumnDef<User>[] = [
   {
     header: 'Matrícula',
-    cell: ({ row }) => getRegistration(row.original.registration.toString()),
+    cell: ({ row }) => (
+      <Button variant="link" asChild>
+        <Link to={`/user/${row.original.id}`}>
+          {getRegistration(row.original.registration.toString())}
+          <ExternalLink />
+        </Link>
+      </Button>
+    ),
   },
   {
     accessorKey: 'name',
@@ -41,9 +52,11 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     header: 'Cargo',
-    cell: ({ row }) =>
-      roleOptions.find((role) => role.value === row.original.role.toString())
-        ?.label,
+    cell: ({ row }) => getRole(row.original.role),
+  },
+  {
+    header: 'Tipo',
+    cell: ({ row }) => getSource(row.original.source),
   },
   {
     header: 'Data de Admissão',

@@ -10,7 +10,9 @@ import { LoginPage } from '@/pages/login/login';
 import { MaintenancePage } from '@/pages/maintenance/maintenance';
 import { DetailedRoutePage } from '@/pages/routes/detailed-route';
 import { RoutesPage } from '@/pages/routes/routes';
+import { DetailedUserPage } from '@/pages/users/detailed-user';
 import { UsersPage } from '@/pages/users/users';
+import { DetailedVehiclePage } from '@/pages/vehicles/detailed-vehicle';
 import { VehiclesPage } from '@/pages/vehicles/vehicles';
 
 import { useQuery } from 'react-query';
@@ -23,7 +25,7 @@ export const App = () => {
     queryFn: () => new API().getTokenUser().catch(() => undefined),
   });
 
-  const defaultRoles = [UserRole.admin, UserRole.manager];
+  const defaultRoles = [UserRole.ADMIN, UserRole.MANAGER];
 
   const getProtectedRoute = (element: JSX.Element, roles: UserRole[]) => {
     return <ProtectedRoute roles={roles} children={element} />;
@@ -46,8 +48,18 @@ export const App = () => {
           />
 
           <Route
+            path="/user/:id"
+            element={getProtectedRoute(<DetailedUserPage />, defaultRoles)}
+          />
+
+          <Route
             path="/vehicles"
             element={getProtectedRoute(<VehiclesPage />, defaultRoles)}
+          />
+
+          <Route
+            path="/vehicle/:id"
+            element={getProtectedRoute(<DetailedVehiclePage />, defaultRoles)}
           />
 
           <Route
@@ -84,7 +96,7 @@ export const App = () => {
             path="/"
             element={getProtectedRoute(<HomePage />, [
               ...defaultRoles,
-              UserRole.driver,
+              UserRole.DRIVER,
             ])}
           />
         </Routes>

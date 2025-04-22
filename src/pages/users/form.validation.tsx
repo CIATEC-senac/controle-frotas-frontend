@@ -36,6 +36,8 @@ export const userSchema = z.object({
   status: z.boolean().optional(),
   // Cargo
   role: z.string({ message: 'Um cargo deve ser selecionado' }),
+  // Tipo
+  source: z.string({ message: 'Um tipo deve ser selecionado' }),
 });
 
 export const toZod = (user?: User) => {

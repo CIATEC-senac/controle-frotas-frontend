@@ -16,6 +16,7 @@ import {
   maskedAdmittedAt,
   maskedCPF,
   roleOptions,
+  sourceOptions,
   User,
 } from '@/models/user.type';
 import { FormAttr } from '@/types/form';
@@ -63,6 +64,7 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
       role: Number(values.role),
       cpf: values.cpf?.replace(/[.-]/g, ''),
       admittedAt: toISO(values.admittedAt),
+      source: Number(values.source),
     } as User);
   };
 
@@ -137,6 +139,15 @@ export const UserForm = ({ data, onSuccess, onFailure }: FormAttr<User>) => {
               label="Cargo"
               placeholder="Seleciona o cargo..."
               options={roleOptions}
+              disabled={isLoading}
+            />
+
+            <FormCombobox
+              control={form.control}
+              name="source"
+              label="Tipo"
+              placeholder="Seleciona o tipo..."
+              options={sourceOptions}
               disabled={isLoading}
             />
           </div>

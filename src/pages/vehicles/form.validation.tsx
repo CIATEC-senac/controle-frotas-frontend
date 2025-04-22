@@ -22,7 +22,7 @@ export const vehicleSchema = z.object({
       message: 'Placa deve estar no seguite padrão AAA0A00, AAA0000',
     }),
   // Tipo
-  type: z.string({ message: 'Campo obrigatório' }).optional(),
+  type: z.string({ message: 'Campo obrigatório' }),
   // Ano
   year: z.string({ message: 'Campo obrigatório' }),
   // Empresa

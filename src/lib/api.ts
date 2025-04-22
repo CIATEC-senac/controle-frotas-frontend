@@ -66,8 +66,8 @@ export class API {
       });
   }
 
-  public async getUser() {
-    return this.http.request<User>('/user').then(({ data }) => data);
+  public async getUser(id: number) {
+    return this.http.request<User>(`/user/${id}`).then(({ data }) => data);
   }
 
   public async updateUser(user: User) {
@@ -89,6 +89,12 @@ export class API {
 
   public async getVehicles() {
     return this.http.request<Vehicle[]>('/vehicle').then(({ data }) => data);
+  }
+
+  public async getVehicle(id: number) {
+    return this.http
+      .request<Vehicle>(`/vehicle/${id}`)
+      .then(({ data }) => data);
   }
 
   public async updateVehicle(vehicle: Vehicle) {

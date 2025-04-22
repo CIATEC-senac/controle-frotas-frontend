@@ -26,16 +26,16 @@ export const MaintenanceActions = ({
 
 export const columns: ColumnDef<Maintenance>[] = [
   {
+    header: 'Data',
+    cell: ({ row }) => fromDate(row.original.date, 'DD/MM/YYYY HH:mm'),
+  },
+  {
     header: 'Descrição',
     cell: ({ row }) => (
-      <span className="block max-w-[300px] break-words whitespace-normal">
+      <span className="block w-[300px] break-words whitespace-normal">
         {row.original.description}
       </span>
     ),
-  },
-  {
-    header: 'Data',
-    cell: ({ row }) => fromDate(row.original.date, 'DD/MM/YYYY HH:mm'),
   },
   {
     header: 'Veículos',
