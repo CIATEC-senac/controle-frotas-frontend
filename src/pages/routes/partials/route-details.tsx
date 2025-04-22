@@ -64,7 +64,7 @@ export const RouteLink = ({ route }: { route: Route }) => {
 
 type DetailAttr = {
   icon?: ReactNode;
-  label: string;
+  label?: string;
   value: string;
   suffix?: string;
 };
@@ -72,9 +72,11 @@ type DetailAttr = {
 export const Detail = ({ icon, label, value, suffix }: DetailAttr) => {
   return (
     <div className="grid text-sm">
-      <p className="flex gap-2 items-center text-gray-600">
-        {icon && icon} {label}:
-      </p>
+      {label && (
+        <p className="flex gap-[10px] items-center text-gray-600">
+          {icon && icon} {label}:
+        </p>
+      )}
 
       <p>
         {value} {suffix && suffix}

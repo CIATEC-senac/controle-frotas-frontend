@@ -1,6 +1,7 @@
 import {
   Bus,
   ChartLine,
+  FileCheck,
   Home,
   Map,
   User as UserIcon,
@@ -64,6 +65,11 @@ const managerRoutes: AppRoutingDetails[] = [
     title: 'Dashboard',
     url: '/dashboard',
     icon: ChartLine,
+  },
+  {
+    title: 'Histórico de Rotas',
+    url: '/routes/history',
+    icon: FileCheck,
   },
 ];
 

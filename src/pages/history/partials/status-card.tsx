@@ -1,29 +1,54 @@
 import { RotateCcw } from 'lucide-react';
 import React from 'react';
 
+import { useAuth } from '@/auth.context';
 import { fromDate } from '@/lib/date-parser';
-import { getStatus, HistoryApproval } from '@/models/history.type';
+import { getStatus, History } from '@/models/history.type';
+import { UserRole } from '@/models/user.type';
+
+import { ApproveRouteButton } from './approve-route-button';
+import { DisapproveRouteButton } from './disapprove-route-button';
 import { Detail, SectionCard } from './history-cards';
 
-export const StatusCard = ({ approval }: { approval?: HistoryApproval }) => {
-  return (
-    <SectionCard icon={<RotateCcw size={16} />} title="Status">
-      <Detail label="Status" value={getStatus(approval)} />
+export const StatusCard = ({ history }: { history: History }) => {
+  const { user } = useAuth();
 
-      {approval && (
+  const getChildren = () => {
+    if (history.approval) {
+      return (
         <React.Fragment>
-          <Detail label="Responsável" value={approval.approvedBy.name} />
+          <Detail
+            label="Responsável"
+            value={history.approval.approvedBy.name}
+          />
 
-          <Detail label="Data" value={fromDate(approval.date)} />
+          <Detail label="Data" value={fromDate(history.approval.date)} />
 
-          {approval.observation && (
+          {history.approval.observation && (
             <React.Fragment>
               <p className="text-gray-500 text-sm">Observação:</p>
-              <p className="text-sm">{approval.observation ?? 'N/A'}</p>
+              <p className="text-sm">{history.approval.observation ?? 'N/A'}</p>
             </React.Fragment>
           )}
         </React.Fragment>
-      )}
+      );
+    }
+
+    if (user?.role === UserRole.MANAGER) {
+      return (
+        <div className="flex gap-3 mt-6">
+          <DisapproveRouteButton id={history.id} />
+          <ApproveRouteButton id={history.id} />
+        </div>
+      );
+    }
+  };
+
+  return (
+    <SectionCard icon={<RotateCcw size={16} />} title="Status">
+      <Detail label="Status" value={getStatus(history.approval)} />
+
+      {getChildren()}
     </SectionCard>
   );
 };

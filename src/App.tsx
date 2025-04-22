@@ -10,6 +10,7 @@ import { HomePage } from '@/pages/home/home';
 import { LoginPage } from '@/pages/login/login';
 import { MaintenancePage } from '@/pages/maintenance/maintenance';
 import { DetailedRoutePage } from '@/pages/routes/detailed-route';
+import { ManagerRoutesPage } from '@/pages/routes/manager-routes';
 import { RoutesPage } from '@/pages/routes/routes';
 import { DetailedUserPage } from '@/pages/users/detailed-user';
 import { UsersPage } from '@/pages/users/users';
@@ -65,6 +66,11 @@ export const App = () => {
           <Route
             path="/maintenances"
             element={getProtectedRoute(<MaintenancePage />, defaultRoles)}
+          />
+
+          <Route
+            path="/routes/history"
+            element={getProtectedRoute(<ManagerRoutesPage />, defaultRoles)}
           />
 
           <Route

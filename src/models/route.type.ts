@@ -45,7 +45,12 @@ export const maskedStartAt = (startAt: string | undefined) =>
   });
 
 export const getNeighborhood = (path: string) => {
-  return path.split('-').at(1)?.toUpperCase();
+  return path.split('-').at(1)?.trim().toUpperCase();
+};
+
+export const getStreet = (path: string) => {
+  const [street, neighborhood] = path.split(',');
+  return [street, neighborhood]?.join(',').trim().toUpperCase();
 };
 
 export const getEstimatedArrivalDate = (route: Route) => {

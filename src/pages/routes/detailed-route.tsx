@@ -14,6 +14,7 @@ import { getName } from '@/models/route.type';
 
 import { Map } from './partials/map';
 import { Detail } from './partials/route-details';
+import { RouteWaypoints } from './partials/route-waypoints';
 
 export const DetailedRoutePage = () => {
   const id = useParams().id;
@@ -27,12 +28,12 @@ export const DetailedRoutePage = () => {
   ).toString();
 
   return (
-    <Layout title={'Rota'}>
-      <div className="w-full h-full relative">
+    <Layout title="Rota">
+      <div className="w-full h-full lg:relative">
         {route && (
           <React.Fragment>
-            <div className="absolute top-[10px] left-[10px] z-10">
-              <Card className="rounded">
+            <div className="lg:absolute lg:top-[10px] lg:left-[10px] lg:z-10">
+              <Card className="rounded shadow-none border-none lg:shadow-2xl">
                 <CardContent className="flex flex-col gap-3 text-sm">
                   <h3>{getName(route)}</h3>
 
@@ -41,6 +42,8 @@ export const DetailedRoutePage = () => {
                     label="Origem"
                     value={route.path.origin.toUpperCase()}
                   />
+
+                  <RouteWaypoints waypoints={route.path.stops} />
 
                   <Detail
                     icon={<MapPin size={14} />}
@@ -69,8 +72,10 @@ export const DetailedRoutePage = () => {
                       value={route.path.stops.length.toString()}
                       suffix="paradas"
                     />
+                  </div>
 
-                    <Button variant="link" asChild>
+                  <div>
+                    <Button variant="link" className="p-0" asChild>
                       <Link to={`/route/${route.id}/history`}>
                         Ver histórico
                       </Link>

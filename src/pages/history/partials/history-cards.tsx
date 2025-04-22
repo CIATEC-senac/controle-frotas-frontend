@@ -62,7 +62,7 @@ export const HistoryCards = ({ history }: { history: History }) => {
 
       <UnshceduledStopsCard history={history} />
 
-      <StatusCard approval={history.approval} />
+      <StatusCard history={history} />
     </React.Fragment>
   );
 };

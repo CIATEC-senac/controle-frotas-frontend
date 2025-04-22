@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
 import { Enterprise } from '@/models/enterprise.type';
-import { History } from '@/models/history.type';
+import { History, HistoryApprovalStatus } from '@/models/history.type';
 import { Maintenance } from '@/models/maintenance.type';
 import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
@@ -144,9 +144,26 @@ export class API {
       .then(({ data }) => data);
   }
 
+  public async getHistories() {
+    return this.http.request<History[]>('/history').then(({ data }) => data);
+  }
+
   public async getHistory(id: number) {
     return this.http
       .request<History>(`/history/${id}`)
+      .then(({ data }) => data);
+  }
+
+  public async updateHistoryStatus(
+    id: number,
+    status: HistoryApprovalStatus,
+    observation?: string
+  ) {
+    return this.http
+      .request<History>(`/history/${id}/status`, {
+        method: 'POST',
+        data: { status, observation },
+      })
       .then(({ data }) => data);
   }
 
@@ -195,7 +212,7 @@ export class API {
   // Statistics
 
   // @ts-ignore
-  public getActiveVehiclesStats(from?: Date, to?: Date) {
+  public async getActiveVehiclesStats(from?: Date, to?: Date) {
     return this.http
       .request<GenericStat>('/stats/active-vehicles', {
         params: { from, to },
@@ -210,7 +227,7 @@ export class API {
   }
 
   // @ts-ignore
-  public getOnGoingRoutesStats(from?: Date, to?: Date) {
+  public async getOnGoingRoutesStats(from?: Date, to?: Date) {
     return this.http
       .request<OnGoingRoutesStat>('/stats/ongoing-routes', {
         params: { from, to },
@@ -222,7 +239,7 @@ export class API {
   }
 
   // @ts-ignore
-  public getActiveDriversStats(from?: Date, to?: Date) {
+  public async getActiveDriversStats(from?: Date, to?: Date) {
     return this.http
       .request<GenericStat>('/stats/active-drivers', {
         params: { from, to },
@@ -238,7 +255,7 @@ export class API {
   }
 
   // @ts-ignore
-  public getElapsedDistanceStats(from?: Date, to?: Date) {
+  public async getElapsedDistanceStats(from?: Date, to?: Date) {
     return this.http
       .request<DistanceStat>('/stats/elapsed-distance', {
         params: { from, to },
@@ -253,7 +270,7 @@ export class API {
   }
 
   // @ts-ignore
-  public getRecentHistoriesStats(from?: Date, to?: Date) {
+  public async getRecentHistoriesStats(from?: Date, to?: Date) {
     return this.http
       .request<RecentHistoryStat[]>('/stats/recent-histories', {
         params: { from, to },

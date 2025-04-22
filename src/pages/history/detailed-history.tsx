@@ -14,7 +14,7 @@ export const DetailedHistoryPage = () => {
 
   const id = useParams().historyId;
 
-  const { data, isLoading, error, refetch } = useQuery(['history', id], () =>
+  const { data, isLoading, error, refetch } = useQuery([`history-${id}`], () =>
     new API().getHistory(Number(id))
   );
 

@@ -2,8 +2,14 @@ import { DetailedRoute, RoutePath, RoutePathCoordinates } from './route.type';
 import { User } from './user.type';
 import { Vehicle } from './vehicle.type';
 
+export enum HistoryApprovalStatus {
+  APPROVED = 0,
+  DISAPPROVED = 1,
+  PENDING = -1,
+}
+
 export type HistoryApproval = {
-  status: number;
+  status: HistoryApprovalStatus;
   date: string;
   observation: string;
   approvedBy: User;
