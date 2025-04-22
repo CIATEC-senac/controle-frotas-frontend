@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { UserRole } from '@/models/user.type';
+import { DashboardPage } from '@/pages/dashboard/dashboard';
 import { DetailedHistoryPage } from '@/pages/history/detailed-history';
 import { HistoryPage } from '@/pages/history/history';
 import { HomePage } from '@/pages/home/home';
@@ -20,9 +21,9 @@ import { API } from './lib/api';
 import { ProtectedRoute } from './protected-route';
 
 export const App = () => {
-  const { data: user, isLoading } = useQuery(['user'], () =>
-    new API().getTokenUser()
-  );
+  const { data: user, isLoading } = useQuery({
+    queryFn: () => new API().getTokenUser().catch(() => undefined),
+  });
 
   const defaultRoles = [UserRole.ADMIN, UserRole.MANAGER];
 
@@ -84,6 +85,11 @@ export const App = () => {
           <Route
             path="/route/:routeId/history/:historyId"
             element={getProtectedRoute(<DetailedHistoryPage />, defaultRoles)}
+          />
+
+          <Route
+            path="/dashboard"
+            element={getProtectedRoute(<DashboardPage />, defaultRoles)}
           />
 
           <Route

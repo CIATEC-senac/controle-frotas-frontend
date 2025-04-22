@@ -4,6 +4,7 @@ import { FetchError } from '@/components/layout/fetch-error';
 import { SkeletonGrid } from '@/components/layout/skeleton-grid';
 import { API } from '@/lib/api';
 
+import { Bus } from 'lucide-react';
 import { RouteCard } from './route-card';
 
 export const ScheduledRoutes = () => {
@@ -59,8 +60,9 @@ export const ScheduledRoutes = () => {
 
   return (
     <div className="flex flex-col gap-y-3">
-      <div className="flex items-center">
-        <h3 className="flex-auto">Rotas em andamento</h3>
+      <div className="flex gap-x-3 items-center">
+        <Bus size={16} />
+        <h3>Rotas em andamento</h3>
       </div>
 
       {getChildren()}

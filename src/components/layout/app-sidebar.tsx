@@ -6,9 +6,9 @@ import {
   User as UserIcon,
   Wrench,
 } from 'lucide-react';
-import { useQuery } from 'react-query';
 import { Link } from 'react-router';
 
+import { useAuth } from '@/auth.context';
 import {
   Sidebar,
   SidebarContent,
@@ -19,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { User, UserRole } from '@/models/user.type';
+import { UserRole } from '@/models/user.type';
 
 type AppRoutingDetails = {
   title: string;
@@ -76,9 +76,7 @@ const RenderGroup = ({
   title?: string;
   roles?: UserRole[];
 }) => {
-  const { data: user } = useQuery<User>(['user']);
-
-  console.log(title, roles, user?.role);
+  const { user } = useAuth();
 
   if (roles?.length && !roles.includes(user?.role!)) {
     return null;
@@ -108,7 +106,7 @@ const RenderGroup = ({
 export const AppSidebar = () => {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="gap-0">
         <RenderGroup items={generalRoutes} />
 
         <RenderGroup

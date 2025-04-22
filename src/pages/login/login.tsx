@@ -2,10 +2,11 @@ import { format } from '@react-input/mask';
 import { AxiosError } from 'axios';
 import { Eye, EyeClosed, Lock, UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import { ToastContainer, toast } from 'react-toastify';
 
+import { useAuth } from '@/auth.context';
 import { Loading } from '@/components/layout/loading';
 import { TextField } from '@/components/layout/textfield';
 import { Button } from '@/components/ui/button';
@@ -13,14 +14,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 
-import { useAuth } from '@/auth.context';
 import { LoginForm } from './login.types';
 
 export const LoginPage = () => {
   useTitle('Login');
 
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { setUser } = useAuth();
 
   const [state, setState] = useState<LoginForm>({ cpf: '', password: '' });
@@ -46,8 +45,8 @@ export const LoginPage = () => {
         // Salvar token
         sessionStorage.setItem('token', token);
 
-        new API().getTokenUser().then((user) => {
-          setUser(user);
+        new API().getTokenUser().then((authUser) => {
+          setUser(authUser);
           navigate('/');
         });
       },
@@ -80,12 +79,11 @@ export const LoginPage = () => {
 
   // Reseta o app ao montar login
   useEffect(() => {
-    queryClient.invalidateQueries(['user']);
     sessionStorage.removeItem('token');
   }, []);
 
   return (
-    <main className="flex flex-col justify-center items-center gap-6 p-6 h-full">
+    <main className="flex flex-col justify-center items-center gap-6 p-6 min-h-[100vh]">
       <form onSubmit={onSubmit}>
         <Card className="pt-0 bg-primary overflow-hidden">
           <Loading className="mb-6" loading={isLoading} />
