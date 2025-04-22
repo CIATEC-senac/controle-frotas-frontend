@@ -1,6 +1,8 @@
+import { JSX } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { UserRole } from '@/models/user.type';
+import { DashboardPage } from '@/pages/dashboard/dashboard';
 import { DetailedHistoryPage } from '@/pages/history/detailed-history';
 import { HistoryPage } from '@/pages/history/history';
 import { HomePage } from '@/pages/home/home';
@@ -11,16 +13,16 @@ import { RoutesPage } from '@/pages/routes/routes';
 import { UsersPage } from '@/pages/users/users';
 import { VehiclesPage } from '@/pages/vehicles/vehicles';
 
-import { JSX } from 'react';
 import { useQuery } from 'react-query';
 import { AuthProvider } from './auth.context';
 import { API } from './lib/api';
 import { ProtectedRoute } from './protected-route';
 
 export const App = () => {
-  const { data: user, isLoading } = useQuery(['user'], () =>
-    new API().getTokenUser()
-  );
+  const { data: user, isLoading } = useQuery({
+    queryFn: () => new API().getTokenUser().catch(() => undefined),
+  });
+
   const defaultRoles = [UserRole.admin, UserRole.manager];
 
   const getProtectedRoute = (element: JSX.Element, roles: UserRole[]) => {
@@ -71,6 +73,11 @@ export const App = () => {
           <Route
             path="/route/:routeId/history/:historyId"
             element={getProtectedRoute(<DetailedHistoryPage />, defaultRoles)}
+          />
+
+          <Route
+            path="/dashboard"
+            element={getProtectedRoute(<DashboardPage />, defaultRoles)}
           />
 
           <Route

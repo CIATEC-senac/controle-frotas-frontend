@@ -18,7 +18,7 @@ export const Layout = ({
       <AppSidebar />
 
       <div className="flex flex-col w-full overflow-x-hidden">
-        <header className="flex items-center gap-6 ">
+        <header className="flex items-center gap-6">
           <div className="p-4 h-[60px]">
             <SidebarTrigger />
           </div>

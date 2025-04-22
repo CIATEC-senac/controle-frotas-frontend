@@ -2,12 +2,13 @@ import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 
 import { Enterprise } from '@/models/enterprise.type';
+import { History } from '@/models/history.type';
+import { Maintenance } from '@/models/maintenance.type';
 import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
 
-import { History } from '@/models/history.type';
-import { Maintenance } from '@/models/maintenance.type';
+import { PerformanceStat } from '@/types/performace-stat';
 import { Http } from './http';
 
 export class API {
@@ -46,7 +47,23 @@ export class API {
   }
 
   public async getTokenUser() {
-    return this.http.request<User>('/token').then(({ data }) => data);
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      console.log('No token');
+      return Promise.reject(new Error('No token'));
+    }
+
+    return this.http
+      .request<User>('/token')
+      .then(({ data }) => data)
+      .catch((e: Error) => {
+        if (e instanceof AxiosError && e.response?.status === 401) {
+          sessionStorage.removeItem('token');
+        }
+
+        throw e;
+      });
   }
 
   public async getUser() {
@@ -165,4 +182,86 @@ export class API {
       .request<Enterprise[]>('/enterprise')
       .then(({ data }) => data);
   }
+
+  // Statistics
+
+  // @ts-ignore
+  public getActiveVehiclesStats = (from?: Date, to?: Date) => {
+    return Promise.resolve({ activeCount: 3, inactiveCount: 5 });
+  };
+
+  // @ts-ignore
+  public getOnGoingRoutesStats = (from?: Date, to?: Date) => {
+    return Promise.resolve({ count: 7 });
+  };
+
+  // @ts-ignore
+  public getActiveDriversStats = (from?: Date, to?: Date) => {
+    return Promise.resolve({ activeCount: 3, inactiveCount: 5, diff: 10 });
+  };
+
+  // @ts-ignore
+  public getElapsedDistanceStats = (from?: Date, to?: Date) => {
+    return Promise.resolve({ total: 3100, diff: 15 });
+  };
+
+  // @ts-ignore
+  public getRecentHistoriesStats = (from?: Date, to?: Date) => {
+    return Promise.resolve([
+      {
+        driver: 'José das Carretas',
+        route: 'Rota 0001',
+        duration: 30,
+        distance: 15.1,
+      },
+    ]);
+  };
+
+  public getDriversPerformance = (
+    // @ts-ignore
+    from?: Date,
+    // @ts-ignore
+    to?: Date
+  ): Promise<PerformanceStat[]> => {
+    return Promise.resolve([
+      { date: 'January', values: { desktop: 186, mobile: 80 } },
+      { date: 'February', values: { desktop: 305, mobile: 200 } },
+      { date: 'March', values: { desktop: 237, mobile: 120 } },
+      { date: 'April', values: { desktop: 73, mobile: 190 } },
+      { date: 'May', values: { desktop: 209, mobile: 130 } },
+      { date: 'June', values: { desktop: 214, mobile: 140 } },
+    ]);
+  };
+
+  public getMaintenancesPerVehicle = (
+    // @ts-ignore
+    from?: Date,
+    // @ts-ignore
+    to?: Date
+  ): Promise<PerformanceStat[]> => {
+    return Promise.resolve([
+      { date: 'January', values: { desktop: 186, mobile: 80 } },
+      { date: 'February', values: { desktop: 305, mobile: 200 } },
+      { date: 'March', values: { desktop: 237, mobile: 120 } },
+      { date: 'April', values: { desktop: 73, mobile: 190 } },
+      { date: 'May', values: { desktop: 209, mobile: 130 } },
+      { date: 'June', values: { desktop: 214, mobile: 140 } },
+    ]);
+  };
+
+  public getMaintenancesPerType = (
+    // @ts-ignore
+    from?: Date,
+    // @ts-ignore
+    to?: Date
+  ): Promise<PerformanceStat[]> => {
+    return Promise.resolve([
+      { date: 'January', values: { desktop: 186, mobile: 80 } },
+      { date: 'February', values: { desktop: 305, mobile: 200 } },
+      { date: 'March', values: { desktop: 237, mobile: 120 } },
+      { date: 'April', values: { desktop: 73, mobile: 190 } },
+      { date: 'May', values: { desktop: 209, mobile: 130 } },
+      { date: 'June', values: { desktop: 214, mobile: 140 } },
+    ]);
+  };
 }

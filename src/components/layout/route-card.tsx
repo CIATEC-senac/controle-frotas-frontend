@@ -26,7 +26,7 @@ export const RouteCard = ({ history }: { history: History }) => {
   return (
     <Card className="relative overflow-hidden">
       <CardContent className="flex flex-col gap-3">
-        {/* <div className="absolute bg-green-500 h-full top-0 left-0 w-[4px]" /> */}
+        <div className="absolute bg-green-500 h-full top-0 left-0 w-[4px]" />
 
         <p className="text-sm">{getName(history.route)}</p>
 
