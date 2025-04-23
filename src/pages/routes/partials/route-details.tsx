@@ -55,7 +55,7 @@ export const RouteActions = ({ route }: { route: Route }) => {
 export const RouteLink = ({ route }: { route: Route }) => {
   return (
     <Button variant="link" asChild>
-      <Link to={`/route/${route.id}`}>
+      <Link to={`/routes/${route.id}`}>
         {getName(route)} <ExternalLink />
       </Link>
     </Button>
@@ -117,7 +117,7 @@ export const columns: ColumnDef<Route>[] = [
     header: 'Histórico',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link to={`/route/${row.original.id}/history`}>Histórico</Link>
+        <Link to={`/routes/${row.original.id}/history`}>Histórico</Link>
       </Button>
     ),
   },

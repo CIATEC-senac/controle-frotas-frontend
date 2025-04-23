@@ -44,7 +44,7 @@ export const RouteCard = ({ history }: { history: History }) => {
 
         <div>
           <Button className="p-0 h-[24px]" variant="link" asChild>
-            <Link to={`/route/${history.route.id}/history/${history.id}`}>
+            <Link to={`/routes/${history.route.id}/history/${history.id}`}>
               Ver detalhes
             </Link>
           </Button>

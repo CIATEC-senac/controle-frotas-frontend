@@ -21,7 +21,7 @@ export const RouteCard = ({ history }: { history: History }) => {
   );
 
   const elapsedDuration = Math.ceil(
-    dayjs(history.startedAt).diff(history.endedAt, 'minutes')
+    Math.abs(dayjs(history.startedAt).diff(history.endedAt, 'minutes'))
   );
 
   return (

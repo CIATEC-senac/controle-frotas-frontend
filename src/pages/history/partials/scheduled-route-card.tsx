@@ -28,8 +28,9 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
     : undefined;
 
   const elapsedDuration = history.startedAt
-    ? Math.ceil(dayjs(history.startedAt).diff(history.endedAt, 'minutes')) +
-      ' minutos'
+    ? Math.ceil(
+        Math.abs(dayjs(history.startedAt).diff(history.endedAt, 'minutes'))
+      ) + ' minutos'
     : undefined;
 
   const waypoints = [
@@ -77,11 +78,14 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
         </div>
 
         <div className="flex-[1] space-y-3">
-          <Detail label="Origem" value={history.path?.origin.toUpperCase()} />
+          <Detail
+            label="Origem"
+            value={history.route.path?.origin.toUpperCase()}
+          />
 
           <Detail
             label="Destino"
-            value={history.path?.destination.toUpperCase()}
+            value={history.route.path?.destination.toUpperCase()}
           />
 
           <Detail

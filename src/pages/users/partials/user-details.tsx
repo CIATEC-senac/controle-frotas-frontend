@@ -31,7 +31,7 @@ export const columns: ColumnDef<User>[] = [
     header: 'Matrícula',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link to={`/user/${row.original.id}`}>
+        <Link to={`/users/${row.original.id}`}>
           {getRegistration(row.original.registration.toString())}
           <ExternalLink />
         </Link>

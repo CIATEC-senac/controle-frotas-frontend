@@ -81,7 +81,7 @@ export const DetailedRoutePage = () => {
 
                   <div>
                     <Button variant="link" className="p-0" asChild>
-                      <Link to={`/route/${route.id}/history`}>
+                      <Link to={`/routes/${route.id}/history`}>
                         Ver histórico
                       </Link>
                     </Button>

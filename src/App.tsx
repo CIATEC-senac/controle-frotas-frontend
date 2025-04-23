@@ -53,7 +53,7 @@ export const App = () => {
           />
 
           <Route
-            path="/user/:id"
+            path="/users/:id"
             element={getProtectedRoute(<DetailedUserPage />, defaultRoles)}
           />
 
@@ -63,7 +63,7 @@ export const App = () => {
           />
 
           <Route
-            path="/vehicle/:id"
+            path="/vehicles/:id"
             element={getProtectedRoute(<DetailedVehiclePage />, defaultRoles)}
           />
 
@@ -83,17 +83,17 @@ export const App = () => {
           />
 
           <Route
-            path="/route/:id"
+            path="/routes/:id"
             element={getProtectedRoute(<DetailedRoutePage />, defaultRoles)}
           />
 
           <Route
-            path="/route/:id/history"
+            path="/routes/:id/history"
             element={getProtectedRoute(<HistoryPage />, defaultRoles)}
           />
 
           <Route
-            path="/route/:routeId/history/:historyId"
+            path="/routes/:routeId/history/:historyId"
             element={getProtectedRoute(<DetailedHistoryPage />, defaultRoles)}
           />
 

@@ -16,7 +16,7 @@ import { VehicleCard } from './vehicle-card';
 export const Detail = ({ label, value }: { label: string; value?: string }) => {
   return (
     <p className="flex flex-[1] gap-3 justify-between">
-      <span className="text-gray-500 text-sm">{label}:</span>
+      <span className="text-gray-500 text-sm min-w-[150px]">{label}:</span>
       <span className="text-sm text-right">{value ?? 'N/A'}</span>
     </p>
   );

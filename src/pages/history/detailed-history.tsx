@@ -44,9 +44,9 @@ export const DetailedHistoryPage = () => {
     { label: 'Rotas', link: '/routes' },
     {
       label: (data && getName(data?.route)) || '',
-      link: `/route/${data?.route.id}`,
+      link: `/routes/${data?.route.id}`,
     },
-    { label: 'Histórico', link: `/route/${data?.route.id}/history` },
+    { label: 'Histórico', link: `/routes/${data?.route.id}/history` },
     { label: data?.id.toString() ?? '' },
   ];
 

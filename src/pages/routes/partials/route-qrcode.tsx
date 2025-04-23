@@ -53,7 +53,7 @@ export const RouteQrCode = ({ route }: { route: Route }) => {
         <div className="p-6 pb-0" ref={printRef}>
           <DialogHeader>
             <DialogTitle className="text-left pb-6">
-              Rota {getName(route)}
+              {getName(route)}
             </DialogTitle>
           </DialogHeader>
 

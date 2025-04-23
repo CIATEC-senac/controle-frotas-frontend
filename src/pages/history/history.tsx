@@ -44,7 +44,7 @@ export const HistoryPage = () => {
 
   const title = [
     { label: 'Rotas', link: '/routes' },
-    { label: (route && getName(route)) || '', link: `/route/${route?.id}` },
+    { label: (route && getName(route)) || '', link: `/routes/${route?.id}` },
     { label: 'Histórico' },
   ];
 

@@ -29,7 +29,7 @@ export const columns: ColumnDef<Vehicle>[] = [
     header: 'Placa',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link to={`/vehicle/${row.original.id}`}>
+        <Link to={`/vehicles/${row.original.id}`}>
           {row.original.plate}
           <ExternalLink />
         </Link>
