@@ -22,7 +22,7 @@ export const RoutesPage = () => {
   const [search, setSearch] = useState('');
 
   const {
-    data: vehicles,
+    data: routes,
     isLoading,
     error,
     refetch,
@@ -42,7 +42,7 @@ export const RoutesPage = () => {
     return (
       <DataTable
         columns={columns}
-        data={(vehicles || []).filter(filter(normalizeString(search)))}
+        data={(routes || []).filter(filter(normalizeString(search)))}
         empty="Nenhum resultado encontrado"
       />
     );

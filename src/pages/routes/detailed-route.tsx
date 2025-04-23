@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { Link, useParams } from 'react-router';
 dayjs.extend(duration);
 
-import { Layout } from '@/components/layout/layout';
+import { getBreadcrumbs, Layout } from '@/components/layout/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { API } from '@/lib/api';
@@ -27,8 +27,13 @@ export const DetailedRoutePage = () => {
     dayjs.duration(route?.estimatedDuration ?? 0, 'seconds').asMinutes()
   ).toString();
 
+  const title = [
+    { label: 'Rotas', link: '/routes' },
+    { label: (route && getName(route)) || '' },
+  ];
+
   return (
-    <Layout title="Rota">
+    <Layout title={getBreadcrumbs(title)}>
       <div className="w-full h-full lg:relative">
         {route && (
           <React.Fragment>

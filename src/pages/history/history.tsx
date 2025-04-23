@@ -1,22 +1,21 @@
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 
-import { DataTable } from '@/components/layout/data-table';
 import { FetchError } from '@/components/layout/fetch-error';
-import { Layout } from '@/components/layout/layout';
+import { getBreadcrumbs, Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
 import { getName } from '@/models/route.type';
 
-import { columns } from './partials/history-details';
+import { HistoryTable } from './partials/history-table';
 
 export const HistoryPage = () => {
   useTitle('Histórico');
   const id = useParams().id;
 
   const {
-    data: history,
+    data: histories,
     isLoading,
     error,
     refetch,
@@ -24,7 +23,7 @@ export const HistoryPage = () => {
     new API().getRouteHistory(Number(id))
   );
 
-  const route = history?.at(0)?.route;
+  const route = histories?.at(0)?.route;
 
   const getChildren = () => {
     if (error) {
@@ -40,22 +39,18 @@ export const HistoryPage = () => {
       return <LoadingMessage />;
     }
 
-    return (
-      <DataTable
-        columns={columns}
-        data={history || []}
-        empty="Nenhum resultado encontrado"
-      />
-    );
+    return <HistoryTable histories={histories ?? []} />;
   };
 
-  return (
-    <Layout title="Histórico">
-      <div className="space-y-6">
-        <h3>{route && getName(route)}</h3>
+  const title = [
+    { label: 'Rotas', link: '/routes' },
+    { label: (route && getName(route)) || '', link: `/route/${route?.id}` },
+    { label: 'Histórico' },
+  ];
 
-        {getChildren()}
-      </div>
+  return (
+    <Layout title={getBreadcrumbs(title)}>
+      <div className="space-y-6">{getChildren()}</div>
     </Layout>
   );
 };

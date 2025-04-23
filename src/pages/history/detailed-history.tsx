@@ -2,10 +2,11 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 
 import { FetchError } from '@/components/layout/fetch-error';
-import { Layout } from '@/components/layout/layout';
+import { getBreadcrumbs, Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { useTitle } from '@/hooks/use-title';
 import { API } from '@/lib/api';
+import { getName } from '@/models/route.type';
 
 import { HistoryCards } from './partials/history-cards';
 
@@ -39,5 +40,15 @@ export const DetailedHistoryPage = () => {
     );
   };
 
-  return <Layout title="Histórico">{getChildren()}</Layout>;
+  const title = [
+    { label: 'Rotas', link: '/routes' },
+    {
+      label: (data && getName(data?.route)) || '',
+      link: `/route/${data?.route.id}`,
+    },
+    { label: 'Histórico', link: `/route/${data?.route.id}/history` },
+    { label: data?.id.toString() ?? '' },
+  ];
+
+  return <Layout title={getBreadcrumbs(title)}>{getChildren()}</Layout>;
 };

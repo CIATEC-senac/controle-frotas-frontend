@@ -1,10 +1,54 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 
 import { AppSidebar } from '@/components/layout/app-sidebar';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+
+type TitleBreadcrumb = {
+  label: string;
+  link?: string;
+}[];
+
+export const getBreadcrumbs = (data: TitleBreadcrumb) => {
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {data.map(({ label, link }, index) => {
+          const notLast = index < data.length - 1;
+
+          const item =
+            link != undefined ? (
+              <BreadcrumbLink asChild>
+                <Link to={link}>{label}</Link>
+              </BreadcrumbLink>
+            ) : (
+              label
+            );
+
+          return (
+            <React.Fragment key={index}>
+              <BreadcrumbItem>
+                {!notLast ? <BreadcrumbPage>{item}</BreadcrumbPage> : item}
+              </BreadcrumbItem>
+
+              {notLast && <BreadcrumbSeparator />}
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+};
 
 export const Layout = ({
   children,
@@ -13,6 +57,8 @@ export const Layout = ({
   children: ReactNode;
   title: ReactNode;
 }) => {
+  title = typeof title == 'string' ? getBreadcrumbs([{ label: title }]) : title;
+
   return (
     <SidebarProvider>
       <AppSidebar />

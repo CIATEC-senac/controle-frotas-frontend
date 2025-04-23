@@ -13,9 +13,8 @@ import { LatLng } from '@/models/route.type';
 import { Detail, SectionCard } from './history-cards';
 
 export const ScheduledRouteCard = ({ history }: { history: History }) => {
-  const estimatedDistance = (history.route.estimatedDistance! / 1000.0).toFixed(
-    2
-  );
+  const estimatedDistance =
+    (history.route.estimatedDistance! / 1000.0).toFixed(2) + ' Km';
 
   const elapsedDistance =
     history.odometerFinal && history.odometerInitial

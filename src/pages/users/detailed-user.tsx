@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 
 import { FetchError } from '@/components/layout/fetch-error';
-import { Layout } from '@/components/layout/layout';
+import { getBreadcrumbs, Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTitle } from '@/hooks/use-title';
@@ -85,5 +85,10 @@ export const DetailedUserPage = () => {
     );
   };
 
-  return <Layout title="Usuário">{getChildren()}</Layout>;
+  const title = [
+    { label: 'Usuários', link: '/users' },
+    { label: data?.name ?? '' },
+  ];
+
+  return <Layout title={getBreadcrumbs(title)}>{getChildren()}</Layout>;
 };

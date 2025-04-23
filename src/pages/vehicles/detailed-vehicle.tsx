@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router';
 
 import { FetchError } from '@/components/layout/fetch-error';
-import { Layout } from '@/components/layout/layout';
+import { getBreadcrumbs, Layout } from '@/components/layout/layout';
 import { LoadingMessage } from '@/components/layout/loading-message';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -145,5 +145,10 @@ export const DetailedVehiclePage = () => {
     );
   };
 
-  return <Layout title="Veículo">{getChildren()}</Layout>;
+  const title = [
+    { label: 'Veículos', link: '/vehicles' },
+    { label: data?.plate ?? '' },
+  ];
+
+  return <Layout title={getBreadcrumbs(title)}>{getChildren()}</Layout>;
 };

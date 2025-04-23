@@ -33,7 +33,11 @@ export const App = () => {
   };
 
   if (isLoading) {
-    return null;
+    return (
+      <div className="min-h-[100vh] w-full flex justify-center items-center">
+        Carregando...
+      </div>
+    );
   }
 
   return (

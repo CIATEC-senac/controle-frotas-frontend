@@ -3,7 +3,7 @@ import { Route } from '@/models/route.type';
 
 export const filter =
   (search: string) =>
-  (user: Route): boolean =>
-    normalizeString(user.path.origin).includes(search) ||
-    normalizeString(user.path.destination).includes(search) ||
-    user.path.stops.some((stop) => normalizeString(stop).includes(search));
+  (route: Route): boolean =>
+    normalizeString(route.path.origin).includes(search) ||
+    normalizeString(route.path.destination).includes(search) ||
+    route.path.stops.some((stop) => normalizeString(stop).includes(search));

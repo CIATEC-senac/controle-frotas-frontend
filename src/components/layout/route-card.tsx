@@ -1,17 +1,15 @@
-import { ArrowRight, CircleUserRound, Clock, Map } from 'lucide-react';
+import { ArrowRight, CircleUserRound, Clock, Route } from 'lucide-react';
+import { Link } from 'react-router';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { fromISO } from '@/lib/date-parser';
 import { History } from '@/models/history.type';
-import { getName } from '@/models/route.type';
-import { Link } from 'react-router';
-import { Button } from '../ui/button';
+import { getName, getStreet } from '@/models/route.type';
 
 export const RouteCard = ({ history }: { history: History }) => {
   const Street = ({ path }: { path: string }) => {
-    const street = path?.split('-').at(0)?.trim().toUpperCase();
-
-    return <span className="text-nowrap">{street}</span>;
+    return <span className="text-nowrap">{getStreet(path)}</span>;
   };
 
   const StartedAt = ({ startedAt }: { startedAt?: string }) => {
@@ -36,7 +34,7 @@ export const RouteCard = ({ history }: { history: History }) => {
         </div>
 
         <div className="flex flex-wrap items-center gap-x-2 text-xs">
-          <Map size={14} />
+          <Route size={14} />
           <Street path={history.route.path?.origin} />
           <ArrowRight size={14} />
           <Street path={history.route.path?.destination} />
