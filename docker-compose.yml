@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  app:
+    tty: true
+    image: frotas-frontend
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    command: "serve -c serve.json -l 5000"
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    
