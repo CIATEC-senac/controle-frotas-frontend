@@ -1,11 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { FileText, MapPin } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { Button } from '@/components/ui/button';
 import { fromDate } from '@/lib/date-parser';
 import { History } from '@/models/history.type';
 import { getStreet } from '@/models/route.type';
-import { FileText, MapPin } from 'lucide-react';
+
+const backendHost = `http://${location.hostname}:3000`;
 
 export const columns: ColumnDef<History>[] = [
   {
@@ -52,7 +54,7 @@ export const columns: ColumnDef<History>[] = [
           <a
             download
             target="_blank"
-            href={`http://192.168.15.12:3000/pdf/${row.original.id}`}
+            href={`${backendHost}/pdf/${row.original.id}`}
           >
             <FileText /> PDF
           </a>
@@ -62,7 +64,7 @@ export const columns: ColumnDef<History>[] = [
           <a
             download
             target="_blank"
-            href={`http://192.168.15.12:3000/excel/${row.original.id}`}
+            href={`${backendHost}/excel/${row.original.id}`}
           >
             <FileText /> Excel
           </a>
