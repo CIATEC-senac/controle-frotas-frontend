@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useQuery } from 'react-query';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
@@ -11,12 +12,17 @@ import {
 } from '@/components/ui/chart';
 import { API } from '@/lib/api';
 
+import { ChartAttr } from '../../dashboard';
 import { getConfig } from './utils';
 
-export const MaintenancesTypesChart = () => {
+export const MaintenancesTypesChart = ({
+  from,
+  to,
+  aggregation,
+}: ChartAttr) => {
   const { data } = useQuery({
-    queryKey: ['stats-maintenances-types'],
-    queryFn: () => new API().getMaintenancesPerType(),
+    queryKey: ['stats-maintenances-types', from, to, aggregation],
+    queryFn: () => new API().getMaintenancesPerType(from, to, aggregation),
     refetchOnMount: true,
   });
 
@@ -38,7 +44,7 @@ export const MaintenancesTypesChart = () => {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => dayjs(value).format('YYYY-MM-DD')}
             />
 
             <YAxis tickLine={false} tickMargin={10} axisLine={false} />

@@ -26,7 +26,7 @@ export const ActiveVehicles = () => {
         <p className="text-2xl font-bold">{data?.activeCount} veículos</p>
 
         <p className="text-xs text-muted-foreground">
-          {data?.inactiveCount} veículos sem rota no momento
+          {data?.inactiveCount} veículo(s) sem rota no momento
         </p>
       </CardContent>
     </Card>

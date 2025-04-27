@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useQuery } from 'react-query';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
@@ -11,12 +12,17 @@ import {
 } from '@/components/ui/chart';
 import { API } from '@/lib/api';
 
+import { ChartAttr } from '../../dashboard';
 import { getConfig } from './utils';
 
-export const DriverPerformanceChart = () => {
+export const DriverPerformanceChart = ({
+  from,
+  to,
+  aggregation,
+}: ChartAttr) => {
   const { data } = useQuery({
-    queryKey: ['stats-drivers-performance'],
-    queryFn: () => new API().getDriversPerformance(),
+    queryKey: ['stats-drivers-performance', from, to, aggregation],
+    queryFn: () => new API().getDriversPerformance(from, to, aggregation),
     refetchOnMount: true,
   });
 
@@ -42,10 +48,15 @@ export const DriverPerformanceChart = () => {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => dayjs(value).format('YYYY-MM-DD')}
             />
 
-            <YAxis tickLine={false} tickMargin={10} axisLine={false} />
+            <YAxis
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => `${value} Km`}
+            />
 
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />

@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { API } from '@/lib/api';
+import { getName, Route } from '@/models/route.type';
 
 export const MostRecentHistories = () => {
   const { data } = useQuery({
@@ -46,14 +47,15 @@ export const MostRecentHistories = () => {
 
           <TableBody>
             {data?.map((data, index) => {
+              const duration = data.duration + ' minutos';
+              const distance = data.distance.toLocaleString('pt-Br') + ' Km';
+
               return (
                 <TableRow key={index}>
                   <TableCell>{data.driver}</TableCell>
-                  <TableCell>{data.route}</TableCell>
-                  <TableCell>{data.duration} minutos</TableCell>
-                  <TableCell>
-                    {Number(data.distance).toLocaleString('pt-Br')} Km
-                  </TableCell>
+                  <TableCell>{getName({ id: data.route } as Route)}</TableCell>
+                  <TableCell>{duration}</TableCell>
+                  <TableCell>{distance}</TableCell>
                 </TableRow>
               );
             })}

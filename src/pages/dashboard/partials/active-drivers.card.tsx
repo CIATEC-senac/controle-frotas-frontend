@@ -26,7 +26,7 @@ export const ActiveDrivers = () => {
         <p className="text-2xl font-bold">{data?.activeCount} motoristas</p>
 
         <p className="text-xs text-muted-foreground">
-          {data?.diff}% acima do mês passado
+          {data?.inactiveCount} motorista(s) sem rota no momento
         </p>
       </CardContent>
     </Card>

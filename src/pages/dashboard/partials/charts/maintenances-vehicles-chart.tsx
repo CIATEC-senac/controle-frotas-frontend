@@ -11,12 +11,18 @@ import {
 } from '@/components/ui/chart';
 import { API } from '@/lib/api';
 
+import dayjs from 'dayjs';
+import { ChartAttr } from '../../dashboard';
 import { getConfig } from './utils';
 
-export const MaintenancesVehiclesChart = () => {
+export const MaintenancesVehiclesChart = ({
+  from,
+  to,
+  aggregation,
+}: ChartAttr) => {
   const { data } = useQuery({
-    queryKey: ['stats-maintenances-vehicle'],
-    queryFn: () => new API().getMaintenancesPerVehicle(),
+    queryKey: ['stats-maintenances-vehicle', from, to, aggregation],
+    queryFn: () => new API().getMaintenancesPerVehicle(from, to, aggregation),
     refetchOnMount: true,
   });
 
@@ -38,7 +44,7 @@ export const MaintenancesVehiclesChart = () => {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => dayjs(value).format('YYYY-MM-DD')}
             />
 
             <YAxis tickLine={false} tickMargin={10} axisLine={false} />

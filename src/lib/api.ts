@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 
 import { Enterprise } from '@/models/enterprise.type';
 import { History, HistoryApprovalStatus } from '@/models/history.type';
-import { Maintenance } from '@/models/maintenance.type';
+import {
+  getType,
+  Maintenance,
+  MaintenanceType,
+} from '@/models/maintenance.type';
 import { DetailedRoute, Route } from '@/models/route.type';
 import { User } from '@/models/user.type';
 import { Vehicle } from '@/models/vehicle.type';
@@ -211,149 +215,83 @@ export class API {
 
   // Statistics
 
-  // @ts-ignore
-  public async getActiveVehiclesStats(from?: Date, to?: Date) {
+  public async getActiveVehiclesStats() {
     return this.http
-      .request<GenericStat>('/stats/active-vehicles', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve({
-          activeCount: 3,
-          inactiveCount: 5,
-        } as GenericStat);
-      });
+      .request<GenericStat>('/stats/active-vehicles')
+      .then(({ data }) => data);
   }
 
-  // @ts-ignore
-  public async getOnGoingRoutesStats(from?: Date, to?: Date) {
+  public async getOnGoingRoutesStats() {
     return this.http
-      .request<OnGoingRoutesStat>('/stats/ongoing-routes', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve({ count: 7 } as OnGoingRoutesStat);
-      });
+      .request<OnGoingRoutesStat>('/stats/ongoing-routes')
+      .then(({ data }) => data);
   }
 
-  // @ts-ignore
-  public async getActiveDriversStats(from?: Date, to?: Date) {
+  public async getActiveDriversStats() {
     return this.http
-      .request<GenericStat>('/stats/active-drivers', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve({
-          activeCount: 3,
-          inactiveCount: 5,
-          diff: 10,
-        } as GenericStat);
-      });
+      .request<GenericStat>('/stats/active-drivers')
+      .then(({ data }) => data);
   }
 
-  // @ts-ignore
-  public async getElapsedDistanceStats(from?: Date, to?: Date) {
+  public async getElapsedDistanceStats() {
     return this.http
-      .request<DistanceStat>('/stats/elapsed-distance', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve({
-          total: 3100,
-          diff: 15,
-        } as DistanceStat);
-      });
+      .request<DistanceStat>('/stats/elapsed-distance')
+      .then(({ data }) => data);
   }
 
-  // @ts-ignore
-  public async getRecentHistoriesStats(from?: Date, to?: Date) {
+  public async getRecentHistoriesStats() {
     return this.http
-      .request<RecentHistoryStat[]>('/stats/recent-histories', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve([
-          {
-            driver: 'José das Carretas',
-            route: 'Rota 0001',
-            duration: 30,
-            distance: 15.1,
-          },
-        ] as RecentHistoryStat[]);
-      });
+      .request<RecentHistoryStat[]>('/stats/recent-histories')
+      .then(({ data }) => data);
   }
 
-  public getDriversPerformance(
-    // @ts-ignore
-    from?: Date,
-    // @ts-ignore
-    to?: Date
+  public async getDriversPerformance(
+    from: Date,
+    to: Date,
+    aggregation: string
   ) {
     return this.http
       .request<PerformanceStat[]>('/stats/drivers-performance', {
-        params: { from, to },
+        params: { from, to, aggregation },
       })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve([
-          { date: 'January', values: { desktop: 186, mobile: 80 } },
-          { date: 'February', values: { desktop: 305, mobile: 200 } },
-          { date: 'March', values: { desktop: 237, mobile: 120 } },
-          { date: 'April', values: { desktop: 73, mobile: 190 } },
-          { date: 'May', values: { desktop: 209, mobile: 130 } },
-          { date: 'June', values: { desktop: 214, mobile: 140 } },
-        ] as PerformanceStat[]);
-      });
+      .then(({ data }) => data);
   }
 
   public getMaintenancesPerVehicle = async (
-    // @ts-ignore
-    from?: Date,
-    // @ts-ignore
-    to?: Date
-  ) => {
-    return this.http
-      .request<PerformanceStat[]>('/stats/maintenances-types', {
-        params: { from, to },
-      })
-      .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve([
-          { date: 'January', values: { desktop: 186, mobile: 80 } },
-          { date: 'February', values: { desktop: 305, mobile: 200 } },
-          { date: 'March', values: { desktop: 237, mobile: 120 } },
-          { date: 'April', values: { desktop: 73, mobile: 190 } },
-          { date: 'May', values: { desktop: 209, mobile: 130 } },
-          { date: 'June', values: { desktop: 214, mobile: 140 } },
-        ] as PerformanceStat[]);
-      });
-  };
-
-  public getMaintenancesPerType = async (
-    // @ts-ignore
-    from?: Date,
-    // @ts-ignore
-    to?: Date
+    from: Date,
+    to: Date,
+    aggregation: string
   ) => {
     return this.http
       .request<PerformanceStat[]>('/stats/maintenances-vehicles', {
-        params: { from, to },
+        params: { from, to, aggregation },
+      })
+      .then(({ data }) => data);
+  };
+
+  public getMaintenancesPerType = async (
+    from: Date,
+    to: Date,
+    aggregation: string
+  ) => {
+    return this.http
+      .request<PerformanceStat[]>('/stats/maintenances-types', {
+        params: { from, to, aggregation },
       })
       .then(({ data }) => data)
-      .catch(() => {
-        return Promise.resolve([
-          { date: 'January', values: { desktop: 186, mobile: 80 } },
-          { date: 'February', values: { desktop: 305, mobile: 200 } },
-          { date: 'March', values: { desktop: 237, mobile: 120 } },
-          { date: 'April', values: { desktop: 73, mobile: 190 } },
-          { date: 'May', values: { desktop: 209, mobile: 130 } },
-          { date: 'June', values: { desktop: 214, mobile: 140 } },
-        ] as PerformanceStat[]);
-      });
+      .then((stats) =>
+        stats.map((stat) => {
+          const values: Record<string, number> = {};
+
+          for (const type in stat.values) {
+            values[getType(Number(type) as MaintenanceType)] =
+              stat.values[type];
+          }
+
+          stat.values = values;
+
+          return stat;
+        })
+      );
   };
 }

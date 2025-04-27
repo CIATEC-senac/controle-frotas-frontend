@@ -11,6 +11,8 @@ export const ElapsedDistance = () => {
     refetchOnMount: true,
   });
 
+  const diff = data?.diff ?? 0;
+
   return (
     <Card>
       <CardHeader>
@@ -28,7 +30,9 @@ export const ElapsedDistance = () => {
         </p>
 
         <p className="text-xs text-muted-foreground">
-          {data?.diff}% acima do mês passado
+          {diff > 0
+            ? `${diff}% acima do mês passado`
+            : `${diff}% abaixo do mês passado`}
         </p>
       </CardContent>
     </Card>
