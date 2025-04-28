@@ -7,6 +7,14 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
     command: "serve -c serve.json -l 5000"
     restart: unless-stopped
     ports:
