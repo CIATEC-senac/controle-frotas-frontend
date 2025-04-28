@@ -26,9 +26,12 @@ export const RouteCard = ({ history }: { history: History }) => {
 
   return (
     <SectionCard icon={<Pin size={16} />} title="Rota">
-      <Detail label="Origem" value={history.path.origin.toUpperCase()} />
+      <Detail label="Origem" value={history.route.path.origin.toUpperCase()} />
 
-      <Detail label="Destino" value={history.path.destination.toUpperCase()} />
+      <Detail
+        label="Destino"
+        value={history.route.path.destination.toUpperCase()}
+      />
 
       <Detail label="Partida" value={fromDate(history.startedAt)} />
 
