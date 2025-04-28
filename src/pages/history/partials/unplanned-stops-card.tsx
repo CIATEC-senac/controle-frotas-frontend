@@ -5,7 +5,7 @@ import { getUnplannedStopType, History } from '@/models/history.type';
 import { SectionCard } from './history-cards';
 
 // @ts-ignore
-export const UnshceduledStopsCard = ({ history }: { history: History }) => {
+export const UnplannedStopsCard = ({ history }: { history: History }) => {
   return (
     <SectionCard
       icon={<TriangleAlert size={16} />}

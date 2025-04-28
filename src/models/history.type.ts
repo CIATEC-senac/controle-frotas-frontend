@@ -1,9 +1,4 @@
-import {
-  DetailedRoute,
-  LatLng,
-  RoutePath,
-  RoutePathCoordinates,
-} from './route.type';
+import { DetailedRoute, LatLng } from './route.type';
 import { User } from './user.type';
 import { Vehicle } from './vehicle.type';
 
@@ -36,6 +31,10 @@ export type HistoryUnplannedStop = {
   id: number;
 };
 
+export type HistoryTrack = {
+  coordinate: LatLng;
+};
+
 export type History = {
   id: number;
   odometerInitial: number;
@@ -43,8 +42,7 @@ export type History = {
   elapsedDistance: number;
   imgOdometerInitial: string;
   imgOdometerFinal: string;
-  pathCoordinates: RoutePathCoordinates;
-  path: RoutePath;
+  track: HistoryTrack[];
   startedAt: string;
   endedAt: string;
   driver: User;

@@ -66,7 +66,7 @@ export const ScheduledRouteCard = ({ history }: { history: History }) => {
               return (
                 <Marker
                   key={index}
-                  location={{ lat: waypoint.lat, lng: waypoint.lng }}
+                  location={waypoint}
                   color="red"
                   // Transforma número em caractere ascii
                   // Referência: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode

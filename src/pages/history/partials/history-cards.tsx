@@ -10,7 +10,8 @@ import { History } from '@/models/history.type';
 import { DriverCard } from './driver-card';
 import { ScheduledRouteCard } from './scheduled-route-card';
 import { StatusCard } from './status-card';
-import { UnshceduledStopsCard } from './unshceduled-stops-card';
+import { TrackingCard } from './tracking-card';
+import { UnplannedStopsCard } from './unplanned-stops-card';
 import { VehicleCard } from './vehicle-card';
 
 export const Detail = ({ label, value }: { label: string; value?: string }) => {
@@ -60,7 +61,9 @@ export const HistoryCards = ({ history }: { history: History }) => {
 
       <ScheduledRouteCard history={history} />
 
-      <UnshceduledStopsCard history={history} />
+      <TrackingCard history={history} />
+
+      <UnplannedStopsCard history={history} />
 
       <StatusCard history={history} />
     </React.Fragment>
