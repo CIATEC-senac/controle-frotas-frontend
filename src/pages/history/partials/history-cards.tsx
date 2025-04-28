@@ -61,7 +61,7 @@ export const HistoryCards = ({ history }: { history: History }) => {
 
       <ScheduledRouteCard history={history} />
 
-      <TrackingCard history={history} />
+      {history.track.length >= 2 ? <TrackingCard history={history} /> : null}
 
       <UnplannedStopsCard history={history} />
 
