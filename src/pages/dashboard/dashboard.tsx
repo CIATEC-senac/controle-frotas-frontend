@@ -41,6 +41,10 @@ export const DashboardPage = () => {
     ['by', defaultAggregation],
   ]);
 
+  if (!searchParams.get('from') || !searchParams.get('to')) {
+    return null;
+  }
+
   const from = dayjs(searchParams.get('from')).toDate();
   const to = dayjs(searchParams.get('to')).toDate();
   const aggregation: StatsAggregation = searchParams.get(
